@@ -1,0 +1,23 @@
+VAGUE OUTLINE OF HOW TO SETUP TRADIER
+
+1. Create tradier account at tradier.com
+
+2. Create folder on computer where tradier files will exist
+
+3. Get Sandbox Account Access credentials from Tradier dashboard (Account Number, Access Token)
+	3a. Settings > "API Access" > {Account Number, Access Token}
+
+4. Add tradier credentials to .env folder in tradier directory
+	3a. tradier_account = '....'
+	3b. tradier_token = '...'
+
+5. Create config.py file
+	Example: https://github.com/thammo4/tradier/blob/main/config.py
+	5a. import necessary modules
+	5b. define .env credentials (i.e. ACCOUNT_NUMBER and AUTH_TOKEN)
+	5c. define url endpoints
+
+6. Test setup by fetching account information
+	Example: https://github.com/thammo4/tradier/blob/main/getuser.py
+
+7. $$$$$$

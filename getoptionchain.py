@@ -1,51 +1,77 @@
 from config import *
-from datetime import datetime, timedelta;
-
-
-#
-# NOTE - there aren't a lot of option expiry dates, i.e. it isn't just every day
-#
-
+from getoptionexpiry import get_expiry_dates;
 
 
 
 #
-# Fetch option chain data 
-
-# date_to_use = '2023-10-20';
-# date_to_use = '2023-09-08';
-date_to_use = '2025-12-19';
-r = requests.get(
-    url     = 'https://sandbox.tradier.com/v1/markets/options/chains',
-    params  = {'symbol': 'HAL', 'expiration':date_to_use, 'greeks':'true'},
-    headers = {'Authorization':'Bearer {}'.format(AUTH_TOKEN), 'Accept':'application/json'}
-);
-
-option_chain = r.json()['options']['option'];
-
-
-print(r.json());
-
-
-
-
-
-# json_response = response.json()
-# print(response.status_code)
-# print(json_response)
-
-
-# r = requests.get(
-#     url     = 'https://sandbox.tradier.com/v1/markets/options/chains',
-#     params  = {'symbol':'DD', 'expiration':'2023-08-25', 'greeks':'true'},
-#     headers = {'Authorization':'Bearer {}'.format(AUTH_TOKEN), 'Accept':'application/json'}
-# );
-
-# print(r.json());
-
-
-#
-# Fetch option strike prices for DuPont
+# Fetch all option chain data for a single day of contract expirations
 #
 
+def option_chain_day (symbol, expiry='', strike_low=False, strike_high=False):
+	'''
+		This function returns option chain data for a given symbol.
+		All contract expirations occur on the same expiry date
+	'''
 
+	#
+	# Set the contract expiration date to the nearest valid date
+	#
+
+	if not expiry:
+		expiry = get_expiry_dates(symbol)[0];
+
+
+    #
+    # Define request object for given symbol and expiration
+    #
+
+    r = requests.get(
+        url = '{}/{}'.format(SANDBOX_URL, OPTION_CHAIN_ENDPOINT),
+        params = {'symbol':symbol, 'expiration':expiry, 'greeks':'false'},
+        headers = REQUESTS_HEADERS
+    );
+
+
+    #
+    # Convert returned json -> pandas dataframe
+    #
+
+    option_df = pd.DataFrame(r.json()['options']['option']);
+
+
+    #
+    # Remove columns which have the same value for every row
+    #
+
+    cols_to_drop = option_df.nunique()[option_df.nunique() == 1].index;
+    option_df = option_df.drop(cols_to_drop, axis=1);
+
+
+    #
+    # Remove columns which have NaN in every row
+    #
+
+    cols_to_drop = option_df.nunique()[option_df.nunique() == 0].index;
+    option_df = option_df.drop(cols_to_drop, axis=1);
+
+
+    #
+    # Remove description column because its information is redundant
+    # 	description = underlying_symbol + strike_price + option_type
+    #
+
+    cols_to_drop = ['description'];
+    option_df = option_df.drop(cols_to_drop, axis=1);
+
+    #
+    # Filter rows per strike_low and strike_high
+    #
+
+    # ....
+
+
+    #
+    # Return resulting dataframe containing option chain data for a given day
+    #
+
+    return option_df;

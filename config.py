@@ -18,4 +18,7 @@ PROFILE_ENDPOINT 	= "v1/user/profile"; 								# GET
 ORDER_ENDPOINT 		= "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); 	# POST
 QUOTES_ENDPOINT 	= "v1/markets/quotes";
 
-OPTION_STRIKE_ENDPOINT = "v1/markets/options/strikes";
+OPTION_STRIKE_ENDPOINT 	= "v1/markets/options/strikes"; 				# GET
+OPTION_CHAIN_ENDPOINT 	= "v1/markets/options/chains"; 					# GET
+OPTION_EXPIRY_ENDPOINT 	= "v1/markets/options/expirations"; 			# GET
+OPTION_SYMBOL_ENDPOINT 	= "v1/markets/options/lookup"; 					# GET

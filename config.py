@@ -3,10 +3,27 @@ import dotenv;
 import requests;
 import pandas as pd;
 
+from datetime import datetime, timedelta; # for fetching option expiries
+
 dotenv.load_dotenv();
+
+
+#
+# Fetch account credentials
+#
 
 ACCOUNT_NUMBER 	= os.getenv('tradier_acct');
 AUTH_TOKEN 		= os.getenv('tradier_token');
+
+
+#
+# Define headers for convenience because of repeated use with requests
+#
+
+REQUESTS_HEADERS = {
+	'Authorization' : 'Bearer {}'.format(AUTH_TOKEN),
+	'Accept' 		: 'application/json'
+}
 
 
 #

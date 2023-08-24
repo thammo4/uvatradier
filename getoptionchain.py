@@ -20,58 +20,72 @@ def option_chain_day (symbol, expiry='', strike_low=False, strike_high=False):
 	if not expiry:
 		expiry = get_expiry_dates(symbol)[0];
 
+	#
+	# Define request object for given symbol and expiration
+	#
 
-    #
-    # Define request object for given symbol and expiration
-    #
+	r = requests.get(
+		url 	= '{}/{}'.format(SANDBOX_URL, OPTION_CHAIN_ENDPOINT),
+		params 	= {'symbol':symbol, 'expiration':expiry, 'greeks':'false'},
+		headers = REQUESTS_HEADERS
+	);
 
-    r = requests.get(
-        url = '{}/{}'.format(SANDBOX_URL, OPTION_CHAIN_ENDPOINT),
-        params = {'symbol':symbol, 'expiration':expiry, 'greeks':'false'},
-        headers = REQUESTS_HEADERS
-    );
+	#
+	# Convert returned json -> pandas dataframe
+	#
 
-
-    #
-    # Convert returned json -> pandas dataframe
-    #
-
-    option_df = pd.DataFrame(r.json()['options']['option']);
+	option_df = pd.DataFrame(r.json()['options']['option']);
 
 
-    #
-    # Remove columns which have the same value for every row
-    #
+	#
+	# Remove columns which have the same value for every row
+	#
 
-    cols_to_drop = option_df.nunique()[option_df.nunique() == 1].index;
-    option_df = option_df.drop(cols_to_drop, axis=1);
+	cols_to_drop = option_df.nunique()[option_df.nunique() == 1].index;
+	option_df = option_df.drop(cols_to_drop, axis=1);
 
+	#
+	# Remove columns which have NaN in every row
+	#
 
-    #
-    # Remove columns which have NaN in every row
-    #
-
-    cols_to_drop = option_df.nunique()[option_df.nunique() == 0].index;
-    option_df = option_df.drop(cols_to_drop, axis=1);
-
-
-    #
-    # Remove description column because its information is redundant
-    # 	description = underlying_symbol + strike_price + option_type
-    #
-
-    cols_to_drop = ['description'];
-    option_df = option_df.drop(cols_to_drop, axis=1);
-
-    #
-    # Filter rows per strike_low and strike_high
-    #
-
-    # ....
+	cols_to_drop = option_df.nunique()[option_df.nunique() == 0].index;
+	option_df = option_df.drop(cols_to_drop, axis=1);
 
 
-    #
-    # Return resulting dataframe containing option chain data for a given day
-    #
+	#
+	# Remove description column because its information is redundant
+	#
 
-    return option_df;
+	cols_to_drop = ['description'];
+	option_df = option_df.drop(cols_to_drop, axis=1);
+
+
+	#
+	# Filter rows per strike_low and strike_high
+	#
+
+	# ...code to follow....
+
+
+	#
+	# Return the resulting dataframe whose rows are individual contracts with expiration `expiry`
+	#
+
+	return option_df;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

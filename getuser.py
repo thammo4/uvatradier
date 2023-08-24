@@ -4,17 +4,15 @@ from config import *
 # Fetch basic account information
 #
 
-r = requests.get(
-	url     = "{}/{}".format(SANDBOX_URL,PROFILE_ENDPOINT),
-	params  = {},
-	headers = {'Authorization':'Bearer {}'.format(AUTH_TOKEN), 'Accept':'application/json'}
-);
+def get_profile ():
+	'''
+		This function returns basic information about user account.
+	'''
 
-#
-# Convert the JSON into a 1 row dataframe containing account information
-#
+	r = requests.get(
+		url 	= '{}/{}'.format(SANDBOX_URL, PROFILE_ENDPOINT),
+		params 	= {},
+		headers = REQUESTS_HEADERS
+	);
 
-df_profile = pd.json_normalize(r.json()['profile']);
-
-print("PROFILE");
-print(df_profile);
+	return pd.json_normalize(r.json()['profile']);

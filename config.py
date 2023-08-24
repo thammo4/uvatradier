@@ -31,10 +31,35 @@ REQUESTS_HEADERS = {
 #
 
 SANDBOX_URL 		= 'https://sandbox.tradier.com';
+
+#
+# Profile endpoints
+#
+
 PROFILE_ENDPOINT 	= "v1/user/profile"; 								# GET
-ORDER_ENDPOINT 		= "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); 	# POST
+
+
+
+#
+# Order endpoint
+#
+
+ORDER_ENDPOINT = "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); 		# POST
+
+
+
+#
+# Equity data endpoints
+#
+
 QUOTES_ENDPOINT 	= "v1/markets/quotes"; 								# GET (POST)
 HISTORICAL_ENDPOINT = "v1/markets/history"; 							# GET
+
+
+
+#
+# Option data endpoints
+#
 
 OPTION_STRIKE_ENDPOINT 	= "v1/markets/options/strikes"; 				# GET
 OPTION_CHAIN_ENDPOINT 	= "v1/markets/options/chains"; 					# GET

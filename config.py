@@ -33,11 +33,11 @@ REQUESTS_HEADERS = {
 SANDBOX_URL 		= 'https://sandbox.tradier.com';
 
 #
-# Profile endpoints
+# Account endpoints
 #
 
-PROFILE_ENDPOINT 	= "v1/user/profile"; 								# GET
-
+PROFILE_ENDPOINT 	= "v1/user/profile"; 											# GET
+POSITIONS_ENDPOINT 	= "v1/accounts/{}/positions".format(ACCOUNT_NUMBER); 	# GET
 
 
 #

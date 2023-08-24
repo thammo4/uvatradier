@@ -1,0 +1,18 @@
+CURRENT LIST OF FUNCTIONS 
+
+1. get_profile ()
+
+
+2.
+get_historical_quotes (
+	symbol, interval='daily', start_date='', end_date=datetime.now().strftime('%Y-%m-%d')
+)
+
+
+3. option_chain_day (symbol, expiry='', strike_low=False, strike_high=False)
+
+4. get_expiry_dates (symbol, strikes=False)
+
+5. get_quote_day (symbol)
+
+6. get_positions()

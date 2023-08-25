@@ -1,6 +1,7 @@
 import os;
 import dotenv;
 import requests;
+import numpy as np;
 import pandas as pd;
 
 from datetime import datetime, timedelta; 	# for fetching option expiries

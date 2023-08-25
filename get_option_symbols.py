@@ -1,6 +1,42 @@
 from config import *
 
 
+#
+# This function returns a list of symbols. Each element has a format
+# 	COP240216C00115000
+#
+# i.e.
+#
+# 	COP 240216 C 00115000
+#
+
+def get_option_symbols (underlying_symbol, df=False):
+	'''
+		This function provides a convenient wrapper to fetch option symbols
+		for a specified underlying_symbol
+	'''
+	r = requests.get(
+		url 		= '{}/{}'.format(SANDBOX_URL, OPTION_SYMBOL_ENDPOINT),
+		params 		= {'underlying':underlying_symbol},
+		headers 	= REQUESTS_HEADERS
+	);
+
+	option_list = r.json()['symbols'][0]['options'];
+
+	if df:
+		option_df = symbol_list_to_df(option_list);
+		option_df['expiration_date'] = parse_option_expiries(option_df['expiration_date']);
+		return option_df;
+
+	return option_list;
+
+
+
+
+#
+# Helper function to convert the get_option_symbols list into a dataframe
+#
+
 def symbol_list_to_df (option_list):
 	'''
 		This is a helper function called from get_option_symbols.
@@ -26,29 +62,18 @@ def symbol_list_to_df (option_list):
 
 
 
+
 #
-# This function returns a list of symbols. Each element has a format
-# 	COP240216C00115000
-#
-# i.e.
-#
-# 	COP 240216 C 00115000
+# Helper function to turn the option dates into standard date format
 #
 
-def get_option_symbols (underlying_symbol, df=False):
+def parse_option_expiries (expiry_list):
 	'''
-		This function provides a convenient wrapper to fetch option symbols
-		for a specified underlying_symbol
+		Helper function to turn the option dates into standard date format
 	'''
-	r = requests.get(
-		url 		= '{}/{}'.format(SANDBOX_URL, OPTION_SYMBOL_ENDPOINT),
-		params 		= {'underlying':underlying_symbol},
-		headers 	= REQUESTS_HEADERS
-	);
 
-	option_list = r.json()['symbols'][0]['options'];
+	formatted_expiries = [];
+	for x in expiry_list:
+		formatted_expiries.append(datetime.strptime(x, '%y%m%d').strftime('%Y-%m-%d'));
 
-	if df:
-		return symbol_list_to_df (option_list);
-
-	return option_list;
+	return formatted_expiries;

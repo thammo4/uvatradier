@@ -16,3 +16,5 @@ get_historical_quotes (
 5. get_quote_day (symbol)
 
 6. get_positions()
+
+7. get_option_symbols (underlying_symbol, df=False), symbol_list_to_df (option_list), parse_option_expiries (expiry_list)

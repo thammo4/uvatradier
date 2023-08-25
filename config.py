@@ -36,7 +36,7 @@ SANDBOX_URL 		= 'https://sandbox.tradier.com';
 # Account endpoints
 #
 
-PROFILE_ENDPOINT 	= "v1/user/profile"; 											# GET
+PROFILE_ENDPOINT 	= "v1/user/profile"; 									# GET
 POSITIONS_ENDPOINT 	= "v1/accounts/{}/positions".format(ACCOUNT_NUMBER); 	# GET
 
 

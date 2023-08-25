@@ -53,10 +53,11 @@ def symbol_list_to_df (option_list):
 	    if match:
 	        root_symbol, expiration_date, option_type, strike_price = match.groups()
 	        parsed_options.append({
-	            'root_symbol': root_symbol,
-	            'expiration_date': expiration_date,
-	            'option_type': option_type,
-	            'strike_price': strike_price
+	        'symbol' 			: option,
+	        'root_symbol' 		: root_symbol,
+	        'expiration_date' 	: expiration_date,
+	        'option_type' 		: option_type,
+	        'strike_price' 		: strike_price
 	        })
 	return pd.DataFrame(parsed_options);
 

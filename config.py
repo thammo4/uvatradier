@@ -3,7 +3,8 @@ import dotenv;
 import requests;
 import pandas as pd;
 
-from datetime import datetime, timedelta; # for fetching option expiries
+from datetime import datetime, timedelta; 	# for fetching option expiries
+import re; 									# parsing option symbols into constituent components
 
 dotenv.load_dotenv();
 

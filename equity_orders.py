@@ -93,3 +93,46 @@ def equity_stop_order (symbol, side, quantity, stop_price, duration='day'):
 	);
 
 	return r.json();
+
+
+
+
+
+#
+# Post data for equity stop-limit order
+#
+
+def equity_stop_limit_order (symbol, side, quantity, stop_price, limit_price, duration='day'):
+	'''
+		This function places a stop limit order with user-specified stop and limit prices.
+		Recall that the stop_price indicates the price at which the order will convert into a limit order.
+		(This contrasts an ordinary stop order, which will convert into a market order at the stop price.)
+
+		The limit_price indicates the limit price once the order becomes a limit order.
+
+		Buy stop limit orders are placed with a price in excess of the current stock price.
+		Sell stop limit orders are placed below the current stock price.
+
+		Parameter Notes:
+			stop_price 	= stop price
+			limit_price	= limit price
+			side 		= buy, buy_to_cover, sell, sell_short
+			duration 	= day, gtc, pre, post
+
+	'''
+	r = requests.post(
+		url 	= '{}/{}'.format(SANDBOX_URL, ORDER_ENDPOINT),
+		data 	= {
+			'class' 	: 'equity',
+			'symbol' 	: symbol,
+			'side' 		: side,
+			'quantity' 	: quantity,
+			'type' 		: 'stop_limit',
+			'duration' 	: duration,
+			'price' 	: limit_price,
+			'stop' 		: stop_price
+		},
+		headers = REQUESTS_HEADERS
+	);
+
+	return r.json();

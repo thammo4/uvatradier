@@ -44,6 +44,7 @@ def equity_limit_order (symbol, side, quantity, limit_price, duration='day'):
 			side 		= buy, buy_to_cover, sell, sell_short
 			duration 	= day, gtc, pre, post
 	'''
+
 	r = requests.post(
 		url = '{}/{}'.format(SANDBOX_URL, ORDER_ENDPOINT),
 		data = {
@@ -54,6 +55,39 @@ def equity_limit_order (symbol, side, quantity, limit_price, duration='day'):
 			'type' 		: 'limit',
 			'duration' 	: duration,
 			'price' 	: limit_price
+		},
+		headers = REQUESTS_HEADERS
+	);
+
+	return r.json();
+
+
+
+
+#
+# Post data for equity stop-loss or stop-entry orders
+#
+
+def equity_stop_order (symbol, side, quantity, stop_price, duration='day'):
+	'''
+		This function places a stop-loss or stop-entry order to buy/sell equities.
+		Recall that a stop order will trigger in the direction of the stock's movement
+
+		Parameter Notes:
+			side 		= buy, buy_to_cover, sell, sell_short
+			duration 	= day, gtc, pre, post
+	'''
+
+	r = requests.post(
+		url 	= '{}/{}'.format(SANDBOX_URL, ORDER_ENDPOINT),
+		data 	= {
+			'class' 	: 'equity',
+			'symbol' 	: symbol,
+			'side' 		: side,
+			'quantity' 	: quantity,
+			'type' 		: 'stop',
+			'duration' 	: duration,
+			'stop' 		: stop_price
 		},
 		headers = REQUESTS_HEADERS
 	);

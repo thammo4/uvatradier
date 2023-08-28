@@ -7,6 +7,9 @@ import pandas as pd;
 from datetime import datetime, timedelta; 	# for fetching option expiries
 import re; 									# parsing option symbols into constituent components
 
+import schedule;
+import time;
+
 dotenv.load_dotenv();
 
 
@@ -70,4 +73,16 @@ OPTION_SYMBOL_ENDPOINT 	= "v1/markets/options/lookup"; 					# GET
 
 
 
+#
+# Intraday market status endpoint
+#
 
+CLOCK_ENDPOINT = "v1/markets/clock"; 									# GET
+
+
+
+#
+# Market calendar endpoint
+#
+
+CALENDAR_ENDPOINT = 'v1/markets/calendar'; 								# GET

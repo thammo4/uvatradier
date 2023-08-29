@@ -44,13 +44,14 @@ SANDBOX_URL 		= 'https://sandbox.tradier.com';
 PROFILE_ENDPOINT 			= "v1/user/profile"; 									# GET
 POSITIONS_ENDPOINT 			= "v1/accounts/{}/positions".format(ACCOUNT_NUMBER); 	# GET
 ACCOUNT_HISTORY_ENDPOINT 	= "v1/accounts/{}/history".format(ACCOUNT_NUMBER); 		# GET
+ACCOUNT_BALANCE_ENDPOINT 	= "v1/accounts/{}/balances".format(ACCOUNT_NUMBER); 	# GET
 
 
 #
 # Order endpoint
 #
 
-ORDER_ENDPOINT = "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); 		# POST
+ORDER_ENDPOINT = "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); 					# POST
 
 
 
@@ -58,8 +59,8 @@ ORDER_ENDPOINT = "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); 		# POST
 # Equity data endpoints
 #
 
-QUOTES_ENDPOINT 	= "v1/markets/quotes"; 								# GET (POST)
-HISTORICAL_ENDPOINT = "v1/markets/history"; 							# GET
+QUOTES_ENDPOINT 	= "v1/markets/quotes"; 											# GET (POST)
+HISTORICAL_ENDPOINT = "v1/markets/history"; 										# GET
 
 
 
@@ -67,10 +68,10 @@ HISTORICAL_ENDPOINT = "v1/markets/history"; 							# GET
 # Option data endpoints
 #
 
-OPTION_STRIKE_ENDPOINT 	= "v1/markets/options/strikes"; 				# GET
-OPTION_CHAIN_ENDPOINT 	= "v1/markets/options/chains"; 					# GET
-OPTION_EXPIRY_ENDPOINT 	= "v1/markets/options/expirations"; 			# GET
-OPTION_SYMBOL_ENDPOINT 	= "v1/markets/options/lookup"; 					# GET
+OPTION_STRIKE_ENDPOINT 	= "v1/markets/options/strikes"; 							# GET
+OPTION_CHAIN_ENDPOINT 	= "v1/markets/options/chains"; 								# GET
+OPTION_EXPIRY_ENDPOINT 	= "v1/markets/options/expirations"; 						# GET
+OPTION_SYMBOL_ENDPOINT 	= "v1/markets/options/lookup"; 								# GET
 
 
 
@@ -78,7 +79,7 @@ OPTION_SYMBOL_ENDPOINT 	= "v1/markets/options/lookup"; 					# GET
 # Intraday market status endpoint
 #
 
-CLOCK_ENDPOINT = "v1/markets/clock"; 									# GET
+CLOCK_ENDPOINT = "v1/markets/clock"; 												# GET
 
 
 
@@ -86,4 +87,4 @@ CLOCK_ENDPOINT = "v1/markets/clock"; 									# GET
 # Market calendar endpoint
 #
 
-CALENDAR_ENDPOINT = 'v1/markets/calendar'; 								# GET
+CALENDAR_ENDPOINT = 'v1/markets/calendar'; 											# GET

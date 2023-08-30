@@ -16,5 +16,6 @@ from get_market_calendar 		import get_market_calendar;
 from get_account_balance 		import get_account_balance;
 # from buy_close_sell_open 		import buy_MSFT, sell_MSFT;
 from get_historical_quotes 		import last_monday, get_historical_quotes;
+from price_per_share 			import price_per_share;
 
 print('hello, world!');

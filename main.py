@@ -2,7 +2,7 @@ from config import *
 
 from getoptionchain 			import option_chain_day;
 from getoptionexpiry 			import get_expiry_dates;
-from getquote 					import get_quote_day;
+from get_quote 					import get_quote_day;
 from getuser 					import get_profile;
 from equity_orders 				import equity_market_order, equity_limit_order, equity_stop_order, equity_stop_limit_order;
 from get_positions 				import get_positions;

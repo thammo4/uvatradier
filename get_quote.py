@@ -1,8 +1,6 @@
 from config import *
 
-
-
-def get_quote_day (symbol):
+def get_quote_day (symbol, last_price=False):
 	'''
 		This function fetches the current quote data about a given symbol
 	'''
@@ -13,4 +11,9 @@ def get_quote_day (symbol):
 		headers = REQUESTS_HEADERS
 	);
 
-	return pd.json_normalize(r.json()['quotes']['quote']);
+	df_quote = pd.json_normalize(r.json()['quotes']['quote']);
+
+	if last_price:
+		return float(df_quote['last']);
+
+	return df_quote;

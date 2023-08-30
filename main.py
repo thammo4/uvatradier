@@ -1,6 +1,5 @@
 from config import *
 
-from gethistoricalquote 		import get_historical_quotes;
 from getoptionchain 			import option_chain_day;
 from getoptionexpiry 			import get_expiry_dates;
 from getquote 					import get_quote_day;
@@ -14,5 +13,8 @@ from get_cancelled_orders 		import rejected_order_by_symbol;
 from cancel_pending_order 		import cancel_pending_order;
 from get_clock 					import get_clock;
 from get_market_calendar 		import get_market_calendar;
+from get_account_balance 		import get_account_balance;
+# from buy_close_sell_open 		import buy_MSFT, sell_MSFT;
+from get_historical_quotes 		import last_monday, get_historical_quotes;
 
 print('hello, world!');

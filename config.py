@@ -4,6 +4,7 @@ import requests;
 import numpy as np;
 import pandas as pd;
 
+import datetime;
 from datetime import datetime, timedelta; 	# for fetching option expiries
 import re; 									# parsing option symbols into constituent components
 
@@ -59,8 +60,8 @@ ORDER_ENDPOINT = "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); 					# POST
 # Equity data endpoints
 #
 
-QUOTES_ENDPOINT 	= "v1/markets/quotes"; 											# GET (POST)
-HISTORICAL_ENDPOINT = "v1/markets/history"; 										# GET
+QUOTES_ENDPOINT 			= "v1/markets/quotes"; 											# GET (POST)
+QUOTES_HISTORICAL_ENDPOINT 	= "v1/markets/history"; 										# GET
 
 
 

@@ -16,7 +16,7 @@ def sell_MSFT ():
 
 
 schedule.every().day.at("15:59:00").do(buy_MSFT);
-schedule.every().day.at("09:01:00").do(sell_MSFT);
+schedule.every().day.at("09:33:00").do(sell_MSFT);
 
 print('Running Buy/Sell MSFT script...\n');
 while True:

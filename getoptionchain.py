@@ -7,7 +7,7 @@ from getoptionexpiry import get_expiry_dates;
 # Fetch all option chain data for a single day of contract expirations
 #
 
-def option_chain_day (symbol, expiry='', strike_low=False, strike_high=False):
+def option_chain_day (symbol, expiry='', strike_low=False, strike_high=False, option_type=False):
 	'''
 		This function returns option chain data for a given symbol.
 		All contract expirations occur on the same expiry date
@@ -64,8 +64,19 @@ def option_chain_day (symbol, expiry='', strike_low=False, strike_high=False):
 	# Filter rows per strike_low and strike_high
 	#
 
-	# ...code to follow....
+	if strike_low:
+		option_df = option_df.query('strike >= @strike_low');
 
+	if strike_high:
+		option_df = option_df.query('strike <= @strike_high');
+
+	if option_type in ['call', 'put']:
+		option_df = option_df.query('option_type == @option_type');
+
+
+	if option_type:
+		if option_type in ['call', 'put']:
+			option_df = option_df.query('option_type == @option_type');
 
 	#
 	# Return the resulting dataframe whose rows are individual contracts with expiration `expiry`

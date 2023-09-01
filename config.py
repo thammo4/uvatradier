@@ -62,6 +62,7 @@ ORDER_ENDPOINT = "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); 					# POST
 
 QUOTES_ENDPOINT 			= "v1/markets/quotes"; 											# GET (POST)
 QUOTES_HISTORICAL_ENDPOINT 	= "v1/markets/history"; 										# GET
+QUOTES_TIMESALES_ENDPOINT 	= "v1/markets/timesales"; 										# GET
 
 
 

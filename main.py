@@ -17,6 +17,7 @@ from get_account_balance 		import get_account_balance;
 # from buy_close_sell_open 		import buy_MSFT, sell_MSFT;
 from get_historical_quotes 		import last_monday, get_historical_quotes;
 from price_per_share 			import price_per_share;
+from straddle_orders 			import straddle_order;
 
 from samp_entropy 				import construct_templates, get_matches, is_match, sample_entropy;
 from approx_entropy 			import ApEn;

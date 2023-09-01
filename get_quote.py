@@ -3,6 +3,9 @@ from config import *
 def get_quote_day (symbol, last_price=False):
 	'''
 		This function fetches the current quote data about a given symbol
+
+		Example Usage:
+			Fetch the last price of a given stock: last_price = get_quote_day('VMC', last_price=True)
 	'''
 
 	r = requests.get(

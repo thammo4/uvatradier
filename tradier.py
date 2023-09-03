@@ -204,245 +204,155 @@ class Account (Tradier):
 		return positions_df;
 
 
+class Quotes (Tradier):
+	def __init__ (self, account_number, auth_token):
+		Tradier.__init__(self, account_number, auth_token);
 
+		#
+		# Quotes endpoints for market data about equities
+		#
 
+		self.QUOTES_ENDPOINT 				= "v1/markets/quotes"; 											# GET (POST)
+		self.QUOTES_HISTORICAL_ENDPOINT 	= "v1/markets/history"; 										# GET
+		self.QUOTES_TIMESALES_ENDPOINT 		= "v1/markets/timesales"; 										# GET
 
+	def get_historical_quotes (self, symbol, interval='daily', start_date=False, end_date=False):
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	def get_gainloss(self, symbols='', results_limit='', sort_dates='closeDate', sort_symbols='', start_date='', end_date=''):
 		'''
-		Fetch gain/loss information for closed positions from the Tradier Account API.
+		Fetch historical stock data for a given symbol from the Tradier Account API.
 
-		This function makes a GET request to the Tradier Account API to retrieve information;
-		about gain/loss for closed positions in the trading account associated with the provided;
-		credentials. The API response is expected to be in JSON format, containing details about;
-		the gain/loss for closed positions.
+		This function makes a GET request to the Tradier Account API to retrieve historical stock
+		data for a specified symbol within a specified time interval.
 
 		Args:
-			symbols (str, optional): A comma-separated string of trading symbols to filter the;
-			gain/loss data. If provided, only positions with matching;
-			symbols will be included.
-			results_limit (str, optional): Limit the number of results returned. If provided,;
-			the function will retrieve the specified number of results.
-			sort_dates (str, optional): Specify how to sort the results by date ('closeDate' or 'openDate').
-			sort_symbols (str, optional): Specify how to sort the results by symbols.
-			start_date (str, optional): Filter the results to include only positions closed on or;
-			after the specified start date (YYYY-MM-DD).
-			end_date (str, optional): Filter the results to include only positions closed on or;
-			before the specified end date (YYYY-MM-DD).
+			symbol (str): The trading symbol of the stock (e.g., 'AAPL', 'MSFT') for which you want
+			              to retrieve historical data.
+			interval (str, optional): The time interval for historical data. Default is 'daily'.
+			start_date (str, optional): The start date for historical data in the format 'YYYY-MM-DD'.
+			                           If not provided, the function will default to the most recent Monday.
+			end_date (str, optional): The end date for historical data in the format 'YYYY-MM-DD'.
+			                         If not provided, the function will default to the current date.
 
 		Returns:
-			pandas.DataFrame: A DataFrame containing gain/loss information for closed positions.
+			pandas.DataFrame: A DataFrame containing historical stock data for the specified symbol.
 
 		Example:
-			# Retrieve all closed position gain/loss without filtering;
-			>>> Account.get_gainloss()
-						 close_date    cost  gain_loss  gain_loss_percent                 open_date  proceeds  quantity symbol  term;
-			0  2023-08-31T00:00:00.000Z  3443.9     -140.9              -4.09  2023-07-24T00:00:00.000Z    3303.0      10.0   MSFT    38;
+			# Create a Quotes instance
+			q = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)
 
-			# Retrieve gain/loss for specific symbols ('AAPL', 'GOOGL');
-			>>> Account.get_gainloss(symbols='AAPL,GOOGL');
+			# Retrieve historical stock data for symbol 'BIIB'
+			historical_data = q.get_historical_quotes(symbol='BIIB')
 
-			# Retrieve gain/loss for positions closed after a specific date;
-			>>> Account.get_gainloss(start_date='2023-01-01');
-
-			# Retrieve gain/loss with custom sorting and result limit;
-			>>> Account.get_gainloss(sort_dates='closeDate', results_limit='10');
+			Sample Output:
+			         date    open     high     low   close   volume
+			0  2023-08-28  265.40  266.470  263.54  265.05   359872
+			1  2023-08-29  265.35  268.150  265.11  268.00   524972
+			2  2023-08-30  268.84  269.460  265.25  267.18   552728
+			3  2023-08-31  266.83  269.175  265.32  267.36  1012842
+			4  2023-09-01  269.01  269.720  266.91  267.17   522401
 		'''
-		params_dict = {'sortBy': sort_dates};
 
-		if results_limit:
-			params_dict['limit'] = results_limit;
+		#
+		# Helper function used to index the start of the trading week
+		#
 
-		if sort_symbols:
-			params_dict['sort'] = sort_symbols;
+		def last_monday (input_date):
+			'''
+			Find the date of the previous Monday for a given input date.
 
-		if start_date:
-			params_dict['start'] = start_date;
+			Args:
+				input_date (datetime.date): the input date
 
-		if end_date:
-			params_dict['end'] = end_date;
+			Returns:
+				datetime.date: The date of the previous Monday.
+			'''
+
+			return (input_date - timedelta(days=(input_date.weekday())));
+
+		if not end_date:
+			end_date = datetime.today().strftime('%Y-%m-%d');
+
+		if not start_date:
+			tmp = datetime.strptime(end_date, '%Y-%m-%d');
+			start_date = last_monday(tmp).strftime('%Y-%m-%d');
 
 		r = requests.get(
-			url='{}/{}'.format(self.SANDBOX_URL, self.ACCOUNT_GAINLOSS_ENDPOINT),
-			params=params_dict,
-			headers=self.REQUESTS_HEADERS
+			url 	= '{}/{}'.format(self.SANDBOX_URL, self.QUOTES_HISTORICAL_ENDPOINT),
+			params 	= {
+				'symbol' 	: symbol,
+				'interval' 	: interval,
+				'start' 	: start_date,
+				'end' 		: end_date
+			},
+			headers = self.REQUESTS_HEADERS
 		);
 
-		gainloss_df = pd.json_normalize(r.json()['gainloss']['closed_position']);
+		return pd.DataFrame(r.json()['history']['day']);
 
-		return gainloss_df;
+	def get_quote_day (self, symbol, last_price=False):
+		'''
+		Fetch the current quote data for a given symbol from the Tradier Account API.
+
+		This function makes a GET request to the Tradier Account API to retrieve the current quote
+		data for a specified symbol.
+
+		Args:
+			symbol (str): The trading symbol of the stock (e.g., 'AAPL', 'MSFT') for which you want
+			              to retrieve the current quote data.
+			last_price (bool, optional): If True, only fetch the last price of the symbol. Default is False.
+
+		Returns:
+			pandas.DataFrame or float: A DataFrame containing the current quote data for the specified symbol
+									   or just the last price as a float if last_price is set to True.
+
+		Example:
+			# Retrieve current quote data for symbol 'CCL' and transpose the DataFrame for easy viewing
+			quote_data = q.get_quote_day(symbol='CCL').T
+
+			Sample Output:
+			                           0
+			symbol                 CCL
+			description  Carnival Corp
+			exch                     N
+			type                 stock
+			last                 15.73
+			change               -0.09
+			volume            16767253
+			open                 15.83
+			high                 16.06
+			low                  15.58
+			close                15.73
+			bid                   15.7
+			ask                  15.73
+			change_percentage    -0.57
+			average_volume    39539044
+			last_volume              0
+			trade_date   1693609200001
+			prevclose            15.82
+			week_52_high         19.55
+			week_52_low           6.11
+			bidsize                 11
+			bidexch                  P
+			bid_date     1693612800000
+			asksize                 29
+			askexch                  P
+			ask_date     1693612764000
+			root_symbols           CCL
+
+			# Retrieve only the last price for symbol 'CCL'
+			last_price = q.get_quote_day(symbol='CCL', last_price=True)
+			Sample Output: 15.73
+		'''
+
+		r = requests.get(
+			url 	= '{}/{}'.format(self.SANDBOX_URL, self.QUOTES_ENDPOINT),
+			params 	= {'symbols':symbol, 'greeks':'false'},
+			headers = self.REQUESTS_HEADERS
+		);
+
+		df_quote = pd.json_normalize(r.json()['quotes']['quote']);
+
+		if last_price:
+			return float(df_quote['last']);
+
+		return df_quote;

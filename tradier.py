@@ -77,17 +77,17 @@ class Account (Tradier):
 		    transposed_profile = user_profile.T  # Transpose the DataFrame for easy viewing.
 
 		Example DataFrame (transposed):
-		                             0
-			id              id-sb-2r01lpprbg
-			name               Thomas Hammons
-			account.account_number     VA36593574
-			account.classification   individual
-			account.date_created  2021-06-23T22:04:20.000Z
+
+			id              				id-sb-2r01lpprbg
+			name               				Fat Albert
+			account.account_number     		ABC1234567
+			account.classification   		individual
+			account.date_created  			2021-06-23T22:04:20.000Z
 			account.day_trader              False
 			account.option_level                6
-			account.status                 active
-			account.type                   margin
-			account.last_update_date  2021-06-23T22:04:20.000Z
+			account.status                 	active
+			account.type                   	margin
+			account.last_update_date 		2021-06-23T22:04:20.000Z
 		'''
 		r = requests.get(
 			url 	= '{}/{}'.format(self.SANDBOX_URL, self.PROFILE_ENDPOINT),
@@ -119,7 +119,7 @@ class Account (Tradier):
 		                            0
 			option_short_value       -147.0
 			total_equity           74314.82
-			account_number       VA36593574
+			account_number       ABC1234567
 			account_type             margin
 			close_pl                      0
 			current_requirement    17595.08

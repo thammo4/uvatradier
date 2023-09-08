@@ -764,6 +764,12 @@ class OptionsOrder (Tradier):
 	#
 
 	def bear_call_spread (self, underlying, option0, quantity0, option1, quantity1, duration='day'):
+		'''
+			Bear call spread legs:
+				• short call with K1 ≥ S -> receive premium d1
+				• long call with K2 > K1 ≥ S -> pay premium d2 ; d2 < d1
+				• upfront credit of (d1-d2)
+		'''
 		r = requests.post(
 			url 	= '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
 			data 	= {
@@ -870,3 +876,6 @@ class OptionsOrder (Tradier):
 account = Account(ACCOUNT_NUMBER, AUTH_TOKEN);
 quotes 	= Quotes(ACCOUNT_NUMBER, AUTH_TOKEN);
 options = OptionsData(ACCOUNT_NUMBER, AUTH_TOKEN);
+
+
+options_order = OptionsOrder(ACCOUNT_NUMBER, AUTH_TOKEN);

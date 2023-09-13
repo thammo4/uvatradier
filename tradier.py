@@ -376,7 +376,7 @@ class OptionsData (Tradier):
 	# Fetch all option chain data for a single day of contract expirations
 	#
 
-	def get_chain_day (self, symbol, expiry='', strike_low=False, strike_high=False, option_type=False):
+	def get_chain_day (self, symbol, expiry='', strike=False, strike_low=False, strike_high=False, option_type=False):
 		'''
 			This function returns option chain data for a given symbol.
 			All contract expirations occur on the same expiry date
@@ -438,6 +438,9 @@ class OptionsData (Tradier):
 
 		if strike_high:
 			option_df = option_df.query('strike <= @strike_high');
+
+		if strike:
+			option_df = option_df.query('strike == @strike');
 
 		if option_type in ['call', 'put']:
 			option_df = option_df.query('option_type == @option_type');

@@ -768,10 +768,22 @@ class OptionsOrder (Tradier):
 
 	def bear_call_spread (self, underlying, option0, quantity0, option1, quantity1, duration='day'):
 		'''
-			Bear call spread legs:
-				• short call with K1 ≥ S -> receive premium d1
-				• long call with K2 > K1 ≥ S -> pay premium d2 ; d2 < d1
-				• upfront credit of (d1-d2)
+			Bear call spread example:
+				• XYZ @ $50/share
+				• Pr(XYZ < $55/share) > .50
+				• Legs
+					• Short Call with K1 ≥ S (e.g. K1=55 > S=50) and receive $3 premium
+					• Long Call with K2 > K1 ≥ S (e.g. K2=60 > K1=55 ≥ S=50) and pay $1 premium
+				• Expiry t=T
+					• If S(T) < K1 -> payoff = premium differential
+					• If K1 < S(T) < K2
+						• short call exercised and must sell at K1 = $55
+						• long call expires OTM
+						• payoff = (K1-K2) + (premium differential) < 0
+					• If S(T) > K2 > K1
+						• short call exercised and must sell at K1 = $55
+						• long call exercised and can buy XYZ at K2 = $60
+						• payoff = (K1-K2) + (premium differential) < 0
 		'''
 		r = requests.post(
 			url 	= '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),

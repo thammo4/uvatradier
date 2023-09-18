@@ -187,47 +187,42 @@ class Account (Tradier):
 		JSON format, containing details about the positions held in the account.
 
 		Args:
-		    symbols (list, optional): A list of trading symbols (e.g., stock ticker symbols)
-		                              to filter the position data. If provided, only positions
-		                              matching these symbols will be included.
-		    equities (bool, optional): If True, filter the positions to include only equities
-		                              (stocks) with symbols less than 5 characters in length.
-		                              If False, no filtering based on equities will be applied.
-		    options (bool, optional): If True, filter the positions to include only options
-		                              with symbols exceeding 5 characters in length.
-		                              If False, no filtering based on options will be applied.
+			symbols (list, optional): A list of trading symbols (e.g., stock ticker symbols)
+										to filter the position data. If provided, only positions
+										matching these symbols will be included.
+			equities (bool, optional): If True, filter the positions to include only equities
+										(stocks) with symbols less than 5 characters in length.
+										If False, no filtering based on equities will be applied.
+			options (bool, optional): If True, filter the positions to include only options
+										with symbols exceeding 5 characters in length.
+										If False, no filtering based on options will be applied.
 
 		Returns:
-		    pandas.DataFrame: A DataFrame containing filtered position information based on
-		                      the specified criteria.
+			pandas.DataFrame: A DataFrame containing filtered position information based on
+								the specified criteria.
 
 		Example:
-		    # Retrieve all positions without filtering
-		    all_positions = get_positions()
+			# Retrieve all positions without filtering
+			all_positions = get_positions()
 
-		    # Retrieve positions for specific symbols ('AAPL', 'GOOGL')
-		    specific_positions = get_positions(symbols=['AAPL', 'GOOGL'])
+			# Retrieve positions for specific symbols ('AAPL', 'GOOGL')
+			specific_positions = get_positions(symbols=['AAPL', 'GOOGL'])
 
-		    # Retrieve only equities
-		    equities_positions = get_positions(equities=True)
+			# Retrieve only equities
+			equities_positions = get_positions(equities=True)
 
-		    # Retrieve only options
-		    options_positions = get_positions(options=True)
+			# Retrieve only options
+			options_positions = get_positions(options=True)
 		'''
 		r = requests.get(url='{}/{}'.format(self.SANDBOX_URL, self.ACCOUNT_POSITIONS_ENDPOINT), params={}, headers=self.REQUESTS_HEADERS);
-
 		positions_df = pd.DataFrame(r.json()['positions']['position']);
-
 		if symbols:
-		    positions_df = positions_df.query('symbol in @symbols');
-
+			positions_df = positions_df.query('symbol in @symbols');
 		if equities:
-		    positions_df = positions_df[positions_df['symbol'].str.len() < 5];
-		    options = False;
-
+			positions_df = positions_df[positions_df['symbol'].str.len() < 5];
+			options = False;
 		if options:
-		    positions_df = positions_df[positions_df['symbol'].str.len() > 5];
-
+			positions_df = positions_df[positions_df['symbol'].str.len() > 5];
 		return positions_df;
 
 
@@ -708,23 +703,16 @@ class OptionsData (Tradier):
 			parsed_options = []
 
 			for option in option_list:
-			    match = re.match(r'([A-Z]+)(\d{6})([CP])(\d+)', option)
-			    if match:
-			        root_symbol, expiration_date, option_type, strike_price = match.groups()
-			        parsed_options.append({
-			        'symbol' 			: option,
-			        'root_symbol' 		: root_symbol,
-			        'expiration_date' 	: expiration_date,
-			        'option_type' 		: option_type,
-			        'strike_price' 		: strike_price
-			        })
+				match = re.match(r'([A-Z]+)(\d{6})([CP])(\d+)', option)
+				if match:
+					root_symbol, expiration_date, option_type, strike_price = match.groups()
+					parsed_options.append({'symbol':option,'root_symbol':root_symbol, 'expiration_date':expiration_date, 'option_type':option_type, 'strike_price':strike_price})
 			return pd.DataFrame(parsed_options);
-
-
+		
+		
 		#
 		# Helper function to turn the option dates into standard date format
 		#
-
 		def parse_option_expiries (expiry_list):
 			'''
 				Helper function to turn the option dates into standard date format

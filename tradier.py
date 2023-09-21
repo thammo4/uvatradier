@@ -379,6 +379,21 @@ class Quotes (Tradier):
 
 		return df_quote;
 
+	def get_timesales (self, symbol, interval='1min', start_time=False, end_time=False):
+		r_params = {'symbol':symbol};
+		if start_time:
+			r_params['start'] = start_time;
+		if end_time:
+			r_params['end'] = end_time;
+
+		r = requests.get(
+			url = '{}/{}'.format(self.SANDBOX_URL, self.QUOTES_TIMESALES_ENDPOINT),
+			params = r_params,
+			headers = self.REQUESTS_HEADERS
+		);
+
+		return pd.json_normalize(r.json()['series']['data']);
+
 
 
 class EquityOrder (Tradier):

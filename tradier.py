@@ -50,7 +50,7 @@ class Account (Tradier):
 		# Account endpoints
 		#
 
-		self.PROFILE_ENDPOINT = "v1/user/profile"; 										# GET
+		self.PROFILE_ENDPOINT = "v1/user/profile"; 													# GET
 
 		self.POSITIONS_ENDPOINT = "v1/accounts/{}/positions".format(ACCOUNT_NUMBER); 				# GET
 
@@ -59,6 +59,11 @@ class Account (Tradier):
 		self.ACCOUNT_GAINLOSS_ENDPOINT 	= "v1/accounts/{}/gainloss".format(ACCOUNT_NUMBER);  		# GET
 		self.ACCOUNT_HISTORY_ENDPOINT 	= "v1/accounts/{}/history".format(ACCOUNT_NUMBER); 			# GET
 		self.ACCOUNT_POSITIONS_ENDPOINT = "v1/accounts/{}/positions".format(ACCOUNT_NUMBER); 		# GET
+
+		self.ACCOUNT_INDIVIDUAL_ORDER_ENDPOINT = "v1/accounts/{account_id}/orders/{order_id}"; 		# GET
+
+
+		self.ORDER_ENDPOINT = "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); 						# GET
 
 	def get_user_profile(self):
 		'''
@@ -178,6 +183,45 @@ class Account (Tradier):
 		return pd.json_normalize(r.json()['gainloss']['closed_position']);
 
 
+	def get_orders (self):
+		'''
+			This function returns a pandas DataFrame.
+			Each row denotes a queued order. Each column contiains a feature_variable pertaining to the order.
+			Transposed sample output has the following structure:
+
+			>>> account.get_orders().T
+			                                           0                         1
+			id                                   8248093                   8255194
+			type                              stop_limit                    market
+			symbol                                   UNP                        CF
+			side                                     buy                       buy
+			quantity                                 3.0                      10.0
+			status                                  open                    filled
+			duration                                 day                       gtc
+			price                                  200.0                       NaN
+			avg_fill_price                           0.0                     87.39
+			exec_quantity                            0.0                      10.0
+			last_fill_price                          0.0                     87.39
+			last_fill_quantity                       0.0                      10.0
+			remaining_quantity                       3.0                       0.0
+			stop_price                             200.0                       NaN
+			create_date         2023-09-25T20:29:10.351Z  2023-09-26T14:45:00.155Z
+			transaction_date    2023-09-26T12:30:19.152Z  2023-09-26T14:45:00.216Z
+			class                                 equity                    equity
+		'''
+
+		r = requests.get(
+			url='{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
+			params={'includeTags':'true'},
+			headers=self.REQUESTS_HEADERS
+		);
+
+		# return pd.DataFrame(r.json()['orders']);
+		return pd.json_normalize(r.json()['orders']['order']);
+
+
+
+
 	def get_positions(self, symbols=False, equities=False, options=False):
 		'''
 		Fetch and filter position data from the Tradier Account API.
@@ -215,15 +259,16 @@ class Account (Tradier):
 			options_positions = get_positions(options=True)
 		'''
 		r = requests.get(url='{}/{}'.format(self.SANDBOX_URL, self.ACCOUNT_POSITIONS_ENDPOINT), params={}, headers=self.REQUESTS_HEADERS);
-		positions_df = pd.DataFrame(r.json()['positions']['position']);
-		if symbols:
-			positions_df = positions_df.query('symbol in @symbols');
-		if equities:
-			positions_df = positions_df[positions_df['symbol'].str.len() < 5];
-			options = False;
-		if options:
-			positions_df = positions_df[positions_df['symbol'].str.len() > 5];
-		return positions_df;
+		if r.json():
+			positions_df = pd.DataFrame(r.json()['positions']['position']);
+			if symbols:
+				positions_df = positions_df.query('symbol in @symbols');
+			if equities:
+				positions_df = positions_df[positions_df['symbol'].str.len() < 5];
+				options = False;
+			if options:
+				positions_df = positions_df[positions_df['symbol'].str.len() > 5];
+			return positions_df;
 
 
 class Quotes (Tradier):
@@ -406,139 +451,43 @@ class EquityOrder (Tradier):
 
 		self.ORDER_ENDPOINT = "v1/accounts/{}/orders".format(self.ACCOUNT_NUMBER); # POST
 
-
-	#
-	# Post data for equity market order
-	#
-
-	def equity_market_order (self, symbol, side, quantity, duration='day'):
+	def order (self, symbol, side, quantity, order_type, duration='day', limit_price=False, stop_price=False):
 		'''
-			This function will place a simple market order for the supplied symbol.
-			By default, the order is good for the day. Per the nature of market orders, it should be filled.
-
-			Parameter Notes:
-				side 		= buy, buy_to_cover, sell, sell_short
-				duration 	= day, gtc, pre, post
+			Example of how to run:
+				>>> eo = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)
+				>>> eo.order(symbol='QQQ', side='buy', quantity=10, order_type='market', duration='gtc');
+				{'order': {'id': 8256590, 'status': 'ok', 'partner_id': '3a8bbee1-5184-4ffe-8a0c-294fbad1aee9'}}
 		'''
 
-		r = requests.post(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
-			params 	= {
-				'class'		: 'equity',
-				'symbol' 	: symbol,
-				'side' 		: side,
-				'quantity' 	: quantity,
-				'type' 		: 'market',
-				'duration' 	: duration
-			},
-			headers = self.REQUESTS_HEADERS
-		);
+		#
+		# Define initial requests parameters dictionary whose fields are applicable to all order_type values
+		#
 
-		return r.json();
+		r_params = {
+			'class'  	: 'equity',
+			'symbol' 	: symbol,
+			'side' 		: side,
+			'quantity' 	: quantity,
+			'type' 		: order_type,
+			'duration' 	: duration
+		};
 
+		#
+		# If the order_type is limit, stop, or stop_limit --> Set the appropriate limit price or stop price
+		#
 
-
-	#
-	# Post data for equity limit order
-	#
-
-	def equity_limit_order (self, symbol, side, quantity, limit_price, duration='day'):
-		'''
-			This function places a limit order to buy/sell the given symbol at the specified limit_price (or better).
-			Recall that a limit order guarantees the execution price. However, the order might not execute at all.
-
-			Parameter Notes:
-				side 		= buy, buy_to_cover, sell, sell_short
-				duration 	= day, gtc, pre, post
-		'''
+		if order_type.lower() in ['limit', 'stop_limit']:
+			r_params['price'] = limit_price;
+		if order_type.lower() in ['stop', 'stop_limit']:
+			r_params['stop'] = stop_price;
 
 		r = requests.post(
 			url = '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
-			data = {
-				'class' 	: 'equity',
-				'symbol' 	: symbol,
-				'side' 		: side,
-				'quantity' 	: quantity,
-				'type' 		: 'limit',
-				'duration' 	: duration,
-				'price' 	: limit_price
-			},
-			headers = self.REQUESTS_HEADERS
+			params = r_params,
+			headers=self.REQUESTS_HEADERS
 		);
 
 		return r.json();
-
-
-	#
-	# Post data for equity stop-loss or stop-entry orders
-	#
-
-	def equity_stop_order (self, symbol, side, quantity, stop_price, duration='day'):
-		'''
-			This function places a stop-loss or stop-entry order to buy/sell equities.
-			Recall that a stop order will trigger in the direction of the stock's movement
-
-			Parameter Notes:
-				side 		= buy, buy_to_cover, sell, sell_short
-				duration 	= day, gtc, pre, post
-		'''
-
-		r = requests.post(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
-			data 	= {
-				'class' 	: 'equity',
-				'symbol' 	: symbol,
-				'side' 		: side,
-				'quantity' 	: quantity,
-				'type' 		: 'stop',
-				'duration' 	: duration,
-				'stop' 		: stop_price
-			},
-			headers = self.REQUESTS_HEADERS
-		);
-
-		return r.json();
-
-
-	#
-	# Post data for equity stop-limit order
-	#
-
-	def equity_stop_limit_order (self, symbol, side, quantity, stop_price, limit_price, duration='day'):
-		'''
-			This function places a stop limit order with user-specified stop and limit prices.
-			Recall that the stop_price indicates the price at which the order will convert into a limit order.
-			(This contrasts an ordinary stop order, which will convert into a market order at the stop price.)
-
-			The limit_price indicates the limit price once the order becomes a limit order.
-
-			Buy stop limit orders are placed with a price in excess of the current stock price.
-			Sell stop limit orders are placed below the current stock price.
-
-			Parameter Notes:
-				stop_price 	= stop price
-				limit_price	= limit price
-				side 		= buy, buy_to_cover, sell, sell_short
-				duration 	= day, gtc, pre, post
-
-		'''
-		r = requests.post(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
-			data 	= {
-				'class' 	: 'equity',
-				'symbol' 	: symbol,
-				'side' 		: side,
-				'quantity' 	: quantity,
-				'type' 		: 'stop_limit',
-				'duration' 	: duration,
-				'price' 	: limit_price,
-				'stop' 		: stop_price
-			},
-			headers = self.REQUESTS_HEADERS
-		);
-
-		return r.json();
-
 
 
 class OptionsData (Tradier):

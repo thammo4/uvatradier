@@ -661,6 +661,15 @@ class OptionsData (Tradier):
 	# 	COP 240216 C 00115000
 	#
 
+	# ##########################
+	# TODO (9/27):
+	# 		1. Change get_options_symbols so that it returns the dataframe format by default
+	# 		2. Investigate the KeyError: 'expiration_date' error produced from `options.get_options_symbols('BWA', df=True)`
+	# 			• Issue arises because there are two different symbols for BorgWarner Inc. {'BWA', 'BWA1'}
+	# 			• Not sure how to fix this problem yet though
+	#
+	# ##########################
+
 	def get_options_symbols (self, symbol, df=False):
 		'''
 			This function provides a convenient wrapper to fetch option symbols

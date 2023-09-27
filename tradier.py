@@ -425,6 +425,29 @@ class Quotes (Tradier):
 		return df_quote;
 
 	def get_timesales (self, symbol, interval='1min', start_time=False, end_time=False):
+		'''
+			This function returns the tick data for `symbol` in increments specified by `interval`.
+			Eventually, we can use this to analyze/visualze stock data in a time series context.
+
+			Arguments `start_time` and `end_time` must be strings with format 'YYYY-MM-DD HH:MM'
+
+			Sample output:
+				>>> quotes.get_timesales('VZ', start_time='2023-09-27 09:45', end_time='2023-09-27 14:00')
+				                    time   timestamp     price     open     high      low   close  volume       vwap
+				0    2023-09-27T09:45:00  1695822300  32.92995  32.9500  32.9500  32.9099  32.915   39077  32.924828
+				1    2023-09-27T09:46:00  1695822360  32.89560  32.9112  32.9112  32.8800  32.895   32867  32.891113
+				2    2023-09-27T09:47:00  1695822420  32.88750  32.8950  32.9100  32.8650  32.910   75720  32.888736
+				3    2023-09-27T09:48:00  1695822480  32.91750  32.9100  32.9250  32.9100  32.910   15126  32.913109
+				4    2023-09-27T09:49:00  1695822540  32.91000  32.9100  32.9200  32.9000  32.920   20335  32.907385
+				..                   ...         ...       ...      ...      ...      ...     ...     ...        ...
+				251  2023-09-27T13:56:00  1695837360  32.35425  32.3450  32.3655  32.3430  32.360   58256  32.354522
+				252  2023-09-27T13:57:00  1695837420  32.35500  32.3500  32.3600  32.3500  32.360   15825  32.355307
+				253  2023-09-27T13:58:00  1695837480  32.36125  32.3599  32.3700  32.3525  32.365   34624  32.362786
+				254  2023-09-27T13:59:00  1695837540  32.37500  32.3700  32.3900  32.3600  32.390   27728  32.370699
+				255  2023-09-27T14:00:00  1695837600  32.38750  32.3866  32.3950  32.3800  32.385   53837  32.386281
+
+				(vwap = volume weighted average price during the interval)
+		'''
 		r_params = {'symbol':symbol};
 		if start_time:
 			r_params['start'] = start_time;

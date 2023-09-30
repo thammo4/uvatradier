@@ -220,8 +220,6 @@ class Account (Tradier):
 		return pd.json_normalize(r.json()['orders']['order']);
 
 
-
-
 	def get_positions(self, symbols=False, equities=False, options=False):
 		'''
 		Fetch and filter position data from the Tradier Account API.
@@ -667,7 +665,6 @@ class OptionsData (Tradier):
 	# 		2. Investigate the KeyError: 'expiration_date' error produced from `options.get_options_symbols('BWA', df=True)`
 	# 			• Issue arises because there are two different symbols for BorgWarner Inc. {'BWA', 'BWA1'}
 	# 			• Not sure how to fix this problem yet though
-	#
 	# ##########################
 
 	def get_options_symbols (self, symbol, df=False):

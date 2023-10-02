@@ -292,7 +292,7 @@ class Quotes (Tradier):
 		Args:
 			symbol (str): The trading symbol of the stock (e.g., 'AAPL', 'MSFT') for which you want
 			              to retrieve historical data.
-			interval (str, optional): The time interval for historical data. Default is 'daily'.
+			interval (str, optional): The time interval for historical data. Default is 'daily'. Alt values are 'weekly' or 'monthly'.
 			start_date (str, optional): The start date for historical data in the format 'YYYY-MM-DD'.
 			                           If not provided, the function will default to the most recent Monday.
 			end_date (str, optional): The end date for historical data in the format 'YYYY-MM-DD'.

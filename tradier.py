@@ -279,6 +279,7 @@ class Quotes (Tradier):
 
 		self.QUOTES_ENDPOINT 				= "v1/markets/quotes"; 											# GET (POST)
 		self.QUOTES_HISTORICAL_ENDPOINT 	= "v1/markets/history"; 										# GET
+		self.QUOTES_SEARCH_ENDPOINT 		= "v1/markets/search"; 											# GET
 		self.QUOTES_TIMESALES_ENDPOINT 		= "v1/markets/timesales"; 										# GET
 
 	def get_historical_quotes (self, symbol, interval='daily', start_date=False, end_date=False):
@@ -459,6 +460,23 @@ class Quotes (Tradier):
 		);
 
 		return pd.json_normalize(r.json()['series']['data']);
+
+
+	def search_companies (self, query):
+		if not query:
+			return "Need that search term yo";
+
+		r = requests.get(
+			url = '{}/{}'.format(self.SANDBOX_URL, self.QUOTES_SEARCH_ENDPOINT),
+			params = {'q': query, 'indexes':'false'},
+			headers = self.REQUESTS_HEADERS
+		);
+
+		if not r.json()['securities']:
+			return "Nothing found";
+
+		return pd.DataFrame(r.json()['securities']['security']);
+
 
 
 

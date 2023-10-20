@@ -960,4 +960,5 @@ quotes 	= Quotes(ACCOUNT_NUMBER, AUTH_TOKEN);
 options = OptionsData(ACCOUNT_NUMBER, AUTH_TOKEN);
 
 
-options_order = OptionsOrder(ACCOUNT_NUMBER, AUTH_TOKEN);
+equity_order 	= EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN);
+options_order 	= OptionsOrder(ACCOUNT_NUMBER, AUTH_TOKEN);

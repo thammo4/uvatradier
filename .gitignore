@@ -1,0 +1,5 @@
+.DS_Store
+.env
+.ipynb_checkpoints/
+__pycache__/
+uvatradier/.DS_Store

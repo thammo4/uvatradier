@@ -43,9 +43,14 @@ SANDBOX_URL 		= 'https://sandbox.tradier.com';
 #
 
 PROFILE_ENDPOINT 			= "v1/user/profile"; 									# GET
+
 POSITIONS_ENDPOINT 			= "v1/accounts/{}/positions".format(ACCOUNT_NUMBER); 	# GET
-ACCOUNT_HISTORY_ENDPOINT 	= "v1/accounts/{}/history".format(ACCOUNT_NUMBER); 		# GET
+
+
 ACCOUNT_BALANCE_ENDPOINT 	= "v1/accounts/{}/balances".format(ACCOUNT_NUMBER); 	# GET
+ACCOUNT_GAINLOSS_ENDPOINT 	= "v1/accounts/{}/gainloss".format(ACCOUNT_NUMBER);
+ACCOUNT_HISTORY_ENDPOINT 	= "v1/accounts/{}/history".format(ACCOUNT_NUMBER); 		# GET
+ACCOUNT_POSITIONS_ENDPOINT 	= "v1/accounts/{}/positions".format(ACCOUNT_NUMBER); 	# GET
 
 
 #
@@ -63,6 +68,7 @@ ORDER_ENDPOINT = "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); 					# POST
 QUOTES_ENDPOINT 			= "v1/markets/quotes"; 											# GET (POST)
 QUOTES_HISTORICAL_ENDPOINT 	= "v1/markets/history"; 										# GET
 QUOTES_TIMESALES_ENDPOINT 	= "v1/markets/timesales"; 										# GET
+QUOTES_SEARCH_ENDPOINT 		= "v1/markets/search"; 											# GET
 
 
 

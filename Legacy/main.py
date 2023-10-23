@@ -6,6 +6,7 @@ from get_quote 					import get_quote_day;
 from getuser 					import get_profile;
 from equity_orders 				import equity_market_order, equity_limit_order, equity_stop_order, equity_stop_limit_order;
 from get_positions 				import get_positions;
+from get_gainloss 				import get_gainloss;
 from get_option_symbols 		import get_option_symbols, symbol_list_to_df, parse_option_expiries;
 from option_orders 				import option_market_order, bull_call_spread, bull_put_spread, bear_call_spread;
 from get_orders 				import get_orders;
@@ -17,6 +18,8 @@ from get_account_balance 		import get_account_balance;
 # from buy_close_sell_open 		import buy_MSFT, sell_MSFT;
 from get_historical_quotes 		import last_monday, get_historical_quotes;
 from price_per_share 			import price_per_share;
+
+
 from straddle_orders 			import straddle_order;
 from married_put 				import married_put;
 

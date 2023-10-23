@@ -41,7 +41,7 @@ def get_positions(symbols=False, equities=False, options=False):
 	    # Retrieve only options
 	    options_positions = get_positions(options=True)
 	'''
-	r = requests.get(url='{}/{}'.format(SANDBOX_URL, POSITIONS_ENDPOINT), params={}, headers=REQUESTS_HEADERS);
+	r = requests.get(url='{}/{}'.format(SANDBOX_URL, ACCOUNT_POSITIONS_ENDPOINT), params={}, headers=REQUESTS_HEADERS);
 
 	positions_df = pd.DataFrame(r.json()['positions']['position']);
 

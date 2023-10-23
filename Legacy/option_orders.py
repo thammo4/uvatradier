@@ -113,7 +113,7 @@ def bull_call_spread (underlying_symbol, option_symbol_0, quantity_0, option_sym
 
 
 #
-# Order contract market order
+# Option contract market order
 #
 
 def option_market_order (underlying_symbol, option_symbol, side, quantity, duration='day'):

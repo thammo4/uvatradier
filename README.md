@@ -1,6 +1,6 @@
 # uvatradier
 
-`uvatradier` is a comprehensive Python package designed to interact with the Tradier API. This package simplifies the process of making API requests, handling responses, and performing various trading and account management operations.
+`uvatradier` is a Python package that serves as a wrapper for the Tradier brokerage API. This package simplifies the process of making API requests, handling responses, and performing various trading and account management operations.
 
 ## Features
 

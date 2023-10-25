@@ -21,7 +21,7 @@ To get started, you need to import the necessary classes from `uvatradier` and p
 
 `from uvatradier import Account, Tradier, EquityOrder, OptionsOrder, OptionsData, Quotes`
 
-`ACCOUNT_NUMBER = 'YOUR_ACCOUNT_NUMBER'`
+`ACCOUNT_NUMBER = 'YOUR_ACCOUNT_NUMBER'` <br>
 `AUTH_TOKEN = 'YOUR_AUTH_TOKEN'`
 
 `account = Account(ACCOUNT_NUMBER, AUTH_TOKEN)` <br>
@@ -102,27 +102,12 @@ To get started, you need to import the necessary classes from `uvatradier` and p
 
 To contribute or make changes to the `uvatradier` package, clone the repository, create a virtual environment, and install the dependencies:
 
-`git clone https://github.com/YOUR_USERNAME/uvatradier.git`
-`cd uvatradier`
-`python -m venv venv`
-`source venv/bin/activate  # On Windows, use venv\Scripts\activate`
-`pip install -r requirements.txt`
-
-## Testing
-
-Run the tests using `pytest`:
-
-`pytest`
+`git clone https://github.com/YOUR_USERNAME/uvatradier.git` <br>
+`cd uvatradier` <br>
+`python -m venv venv` <br>
+`source venv/bin/activate  # On Windows, use venv\Scripts\activate` <br>
+`pip install -r requirements.txt` <br>
 
 ## License
 
-`uvatradier` is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Thanks to Tradier for providing a comprehensive trading API.
-- Thanks to all the contributors who helped in building and maintaining this package.
-
-## Contact
-
-For any questions or suggestions, feel free to contact the maintainers of this repository.
+`uvatradier` is licensed under the Apache License 2.0

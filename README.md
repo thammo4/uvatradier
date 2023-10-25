@@ -25,10 +25,15 @@ To get started, you need to import the necessary classes from `uvatradier` and p
 `AUTH_TOKEN = 'YOUR_AUTH_TOKEN'`
 
 `account = Account(ACCOUNT_NUMBER, AUTH_TOKEN)`
+
 `tradier = Tradier(ACCOUNT_NUMBER, AUTH_TOKEN)`
+
 `equity_order = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)`
+
 `options_order = OptionsOrder(ACCOUNT_NUMBER, AUTH_TOKEN)`
+
 `options_data = OptionsData(ACCOUNT_NUMBER, AUTH_TOKEN)`
+
 `quotes = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)`
 
 ## Usage

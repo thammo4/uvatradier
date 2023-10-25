@@ -24,9 +24,9 @@ To get started, you need to import the necessary classes from `uvatradier` and p
 `ACCOUNT_NUMBER = 'YOUR_ACCOUNT_NUMBER'`
 `AUTH_TOKEN = 'YOUR_AUTH_TOKEN'`
 
-`account = Account(ACCOUNT_NUMBER, AUTH_TOKEN)`
+`account = Account(ACCOUNT_NUMBER, AUTH_TOKEN)` <br>
 
-`tradier = Tradier(ACCOUNT_NUMBER, AUTH_TOKEN)`
+`tradier = Tradier(ACCOUNT_NUMBER, AUTH_TOKEN)` <br>
 
 `equity_order = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)`
 

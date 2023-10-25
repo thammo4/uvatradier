@@ -1,5 +1,8 @@
 from .base import Tradier
 
+import requests
+import pandas as pd
+
 
 class EquityOrder (Tradier):
 	def __init__ (self, account_number, auth_token):

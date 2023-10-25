@@ -1,5 +1,8 @@
 from .base import Tradier
 
+import requests
+import pandas as pd
+
 class OptionsData (Tradier):
 	def __init__ (self, account_number, auth_token):
 		Tradier.__init__(self, account_number, auth_token);

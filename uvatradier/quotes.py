@@ -1,6 +1,7 @@
 from .base import Tradier
-
 import requests
+import datetime
+from datetime import timedelta
 import pandas as pd
 
 class Quotes (Tradier):

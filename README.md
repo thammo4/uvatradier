@@ -2,6 +2,10 @@
 
 `uvatradier` is a Python package that serves as a wrapper for the Tradier brokerage API. This package simplifies the process of making API requests, handling responses, and performing various trading and account management operations.
 
+The package was originally developed by data science master's students at the University of Virginia.
+
+Wahoowah.
+
 ## Features
 
 - **Account Management**: Retrieve profile, balance, gain/loss, orders, and positions related to a trading account.

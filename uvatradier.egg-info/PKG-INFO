@@ -1,16 +1,21 @@
 Metadata-Version: 2.1
 Name: uvatradier
-Version: 0.0.5
+Version: 0.0.7
 Summary: wahoowah
 Home-page: https://github.com/thammo4/uvatradier
 Author: tom hammons
 Project-URL: Bug Tracker, https://github.com/thammo4/uvatradier/issues
+Keywords: tradier finance api
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
 # uvatradier
 
 `uvatradier` is a Python package that serves as a wrapper for the Tradier brokerage API. This package simplifies the process of making API requests, handling responses, and performing various trading and account management operations.
+
+The package was originally developed by data science master's students at the University of Virginia.
+
+Wahoowah.
 
 ## Features
 

@@ -6,12 +6,13 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setup(
 	name='uvatradier',
-	version='0.0.5',
+	version='0.0.7',
 	author='tom hammons',
 	description='wahoowah',
 	long_description=long_description,
 	long_description_content_type='text/markdown',
 	url='https://github.com/thammo4/uvatradier',
 	packages=find_packages(),
-	project_urls={'Bug Tracker':'https://github.com/thammo4/uvatradier/issues'}
+	project_urls={'Bug Tracker':'https://github.com/thammo4/uvatradier/issues'},
+	keywords='tradier finance api',
 );

@@ -1,7 +1,8 @@
 from .base import Tradier
-
-import requests
 import pandas as pd
+import requests
+import datetime
+from datetime import datetime, timedelta
 
 class Quotes (Tradier):
 	def __init__ (self, account_number, auth_token):

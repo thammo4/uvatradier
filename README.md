@@ -28,8 +28,9 @@ Steps to get started:
   * Create a `.env` file in the appropriate working directory on your computer.
     * Launch text editor application.
     * Save the file as `.env`.
-    * In the file, add the following lines, replacing the appropriate placeholder fields:
+    * In the file, add the following lines, replacing the appropriate placeholder fields: <br>
         `tradier_acct=<YOUR_ACCOUNT_NUMBER_FROM_TRADIER_DASHBOARD>`
+
         `tradier_token=<YOUR_ACCESS_TOKEN_FROM_TRADIER_DASHBOARD>`
   * Within the aforementioned working directory, initiate a new python session (interactive python, jupyter notebook, etc.).
   * To authenticate yourself, add the following lines of code to the top of your python script or jupyter notebook: <br>

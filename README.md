@@ -59,7 +59,7 @@ Steps to get started:
 
 ## Usage
 
-This section provides example functionality of the existing codebase.
+This section provides example functionality of the existing codebase. Additional sample code demonstrating usage can be found in the `/examples/` directory.
 
 ### Account Management
 

@@ -12,11 +12,11 @@ from uvatradier import Tradier, Quotes
 
 dotenv.load_dotenv()
 
-ACCOUNT_NUMBER = os.getenv('tradier_acct')
-AUTH_TOKEN = os.getenv('tradier_token')
+tradier_acct = os.getenv('tradier_acct')
+tradier_token = os.getenv('tradier_token')
 
 # Initializing new Quotes object
-quotes = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN);
+quotes = Quotes(tradier_acct, tradier_token);
 
 test_quote = quotes.get_quote_day('KO')
 

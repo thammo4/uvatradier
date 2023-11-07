@@ -12,10 +12,11 @@ from uvatradier import Tradier, Account;
 
 dotenv.load_dotenv();
 
-ACCOUNT_NUMBER = os.getenv('tradier_acct'); AUTH_TOKEN = os.getenv('tradier_token');
+tradier_acct = os.getenv('tradier_acct');
+tradier_token = os.getenv('tradier_token');
 
 # Initialize a new Account object
-account = Account(ACCOUNT_NUMBER, AUTH_TOKEN);
+account = Account(tradier_acct, tradier_token);
 
 # Fetch account balance info
 balance = account.get_account_balance();

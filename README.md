@@ -19,28 +19,46 @@ To install `uvatradier`, you can use `pip`:
 
 `pip install uvatradier`
 
-## Quick Start
+## Hello World
 
-To get started, you need to import the necessary classes from `uvatradier` and provide your Tradier account number and authorization token.
+Steps to get started:
+  * Create an account with <a href='https://tradier.com/'>Tradier.com</a>.
+  * Grab Account Number and Access Token from your Tradier dashboard.
+    * Log into Tradier > Preferences (gear icon) > API Access (left panel) > Sandbox Account Access (section).
+  * Create a `.env` file in the appropriate working directory on your computer.
+    * Launch text editor application.
+    * Save the file as `.env`.
+    * In the file, add the following lines, replacing the appropriate placeholder fields:
+        `tradier_acct=<YOUR_ACCOUNT_NUMBER_FROM_TRADIER_DASHBOARD>`
+        `tradier_token=<YOUR_ACCESS_TOKEN_FROM_TRADIER_DASHBOARD>`
+  * Within the aforementioned working directory, initiate a new python session (interactive python, jupyter notebook, etc.).
+  * To authenticate yourself, add the following lines of code to the top of your python script or jupyter notebook: <br>
+      `import os, dotenv`
+      
+      `from uvatradier import Tradier, Account, Quotes, EquityOrder, OptionsData, OptionsOrder`
+      
+      `dotenv.load_dotenv()`
+      
+      `tradier_acct = os.getenv('tradier_acct')`
+      
+      `tradier_token = os.getenv('tradier_token')`
+    
+  * To instantiate the class objects, use: <br>
+      `tradier = Tradier(tradier_acct, tradier_token)`
 
-`from uvatradier import Account, Tradier, EquityOrder, OptionsOrder, OptionsData, Quotes`
+      `account = Account(tradier_acct, tradier_token)`
 
-`ACCOUNT_NUMBER = 'YOUR_ACCOUNT_NUMBER'` <br>
-`AUTH_TOKEN = 'YOUR_AUTH_TOKEN'`
+      `quotes = Quotes(tradier_acct, tradier_token)`
 
-`account = Account(ACCOUNT_NUMBER, AUTH_TOKEN)` <br>
+      `equity_order = EquityOrder(tradier_acct, tradier_token)`
 
-`tradier = Tradier(ACCOUNT_NUMBER, AUTH_TOKEN)` <br>
+      `options_data = OptionsData(tradier_acct, tradier_token`
 
-`equity_order = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)`
-
-`options_order = OptionsOrder(ACCOUNT_NUMBER, AUTH_TOKEN)`
-
-`options_data = OptionsData(ACCOUNT_NUMBER, AUTH_TOKEN)`
-
-`quotes = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)`
+      `options_order = OptionsOrder(tradier_acct, tradier_token)`
 
 ## Usage
+
+This section provides example functionality of the existing codebase.
 
 ### Account Management
 

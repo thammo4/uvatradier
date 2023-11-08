@@ -3,6 +3,7 @@ import pandas as pd
 import requests
 import datetime
 from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
 
 class Quotes (Tradier):
 	def __init__ (self, account_number, auth_token):
@@ -195,6 +196,24 @@ class Quotes (Tradier):
 		);
 
 		return pd.json_normalize(r.json()['series']['data']);
+
+	def get_timeseries_plot (self, symbol, plot_var='close', interval='daily', start_date=False, end_date=False):
+		'''
+			Construct a time series plot of the dataframe returned by Quotes.get_historical_quotes.
+
+			Args:
+				plot_var (str): lowercase string indicating the bar-data column to put onto the plot ['open', 'high', 'low', 'close', 'volume']
+
+			See help(Quotes.get_historical_quotes) for information about remaining parameters.
+		'''
+		bar_data = self.get_historical_quotes(symbol, interval, start_date, end_date);
+		bar_data['date'] = pd.to_datetime(bar_data['date']);
+		bar_data.set_index('date', inplace=True);
+		plot_str = "{} {} Price".format(symbol.upper(), plot_var[0].upper() + plot_var[1:]);
+		plt.plot(bar_data[plot_var], label=plot_str);
+		plt.title(plot_str);
+		plt.legend();
+		plt.show();
 
 
 	def search_companies (self, query):

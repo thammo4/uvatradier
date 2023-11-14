@@ -16,6 +16,12 @@ class EquityOrder (Tradier):
 
 	def order (self, symbol, side, quantity, order_type, duration='day', limit_price=False, stop_price=False):
 		'''
+			Arguments:
+				symbol 		= Stock Ticker Symbol.
+				side 		= ['buy', 'buy_to_cover', 'sell', 'sell_short']
+				order_type 	= ['market', 'limit', 'stop', 'stop_limit']
+				duration 	= ['day', 'gtc', 'pre', 'post']
+
 			Example of how to run:
 				>>> eo = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)
 				>>> eo.order(symbol='QQQ', side='buy', quantity=10, order_type='market', duration='gtc');

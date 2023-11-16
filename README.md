@@ -123,7 +123,7 @@ This section provides example functionality of the existing codebase. Additional
 
 ## Development
 
-To contribute or make changes to the `uvatradier` package, feel free to create a fork, clone the fork, and have at it:
+To contribute or make changes to the `uvatradier` package, feel free to create a fork, clone the fork, make some improvements and issue a pull request:
 
 `git clone https://github.com/YOUR_USERNAME/uvatradier.git` <br>
 `cd uvatradier` <br>

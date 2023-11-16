@@ -123,7 +123,7 @@ This section provides example functionality of the existing codebase. Additional
 
 ## Development
 
-To contribute or make changes to the `uvatradier` package, clone the repository, create a virtual environment, and install the dependencies:
+To contribute or make changes to the `uvatradier` package, feel free to create a fork, clone the fork, and have at it:
 
 `git clone https://github.com/YOUR_USERNAME/uvatradier.git` <br>
 `cd uvatradier` <br>

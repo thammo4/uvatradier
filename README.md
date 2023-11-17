@@ -133,7 +133,7 @@ To contribute or make changes to the `uvatradier` package, feel free to create a
 
 ## Questions?
 
-Happy to help! Feel free to contact Tom by email at qje5vf@virginia.edu. <br>
+Happy to help! Feel free to contact Tom Hammons by email at qje5vf@virginia.edu. <br>
 Thanks much in advance for your interest in using the package.
 
 ## License

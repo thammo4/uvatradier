@@ -131,6 +131,11 @@ To contribute or make changes to the `uvatradier` package, feel free to create a
 `source venv/bin/activate  # On Windows, use venv\Scripts\activate` <br>
 `pip install -r requirements.txt` <br>
 
+## Questions?
+
+Happy to help! Feel free to contact Tom by email at qje5vf@virginia.edu. <br>
+Thanks much in advance for your interest in using the package.
+
 ## License
 
 `uvatradier` is licensed under the Apache License 2.0

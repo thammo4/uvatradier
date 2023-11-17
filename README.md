@@ -123,13 +123,21 @@ This section provides example functionality of the existing codebase. Additional
 
 ## Development
 
-To contribute or make changes to the `uvatradier` package, feel free to create a fork, clone the fork, make some improvements and issue a pull request:
+To contribute or make changes to the `uvatradier` package, feel free to create a fork, clone the fork, make some improvements and issue a pull request. From the terminal/command prompt:
 
-`git clone https://github.com/YOUR_USERNAME/uvatradier.git` <br>
-`cd uvatradier` <br>
-`python -m venv venv` <br>
-`source venv/bin/activate  # On Windows, use venv\Scripts\activate` <br>
-`pip install -r requirements.txt` <br>
+- Clone the forked branch to your local machine:
+
+  `git clone https://github.com/YOUR_USERNAME/uvatradier.git`
+
+- Navigate to the directory where the relevant code is kept: 
+
+  `cd uvatradier`
+
+- If you need to be careful about dependencies, create a new Python virtual environment: <br>
+
+  `python -m venv replace_this_with_desired_venv_name` [Mac] <br>
+  
+  `venv\Scripts\activate` [Windows]
 
 ## Questions?
 

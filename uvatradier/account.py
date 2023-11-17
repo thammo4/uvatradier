@@ -177,9 +177,10 @@ class Account (Tradier):
 			headers=self.REQUESTS_HEADERS
 		);
 
-		# return pd.DataFrame(r.json()['orders']);
-		return pd.json_normalize(r.json()['orders']['order']);
+		if r.json()['orders'] == 'null':
+			return 'You have no current orders.'
 
+		return pd.json_normalize(r.json()['orders']['order'])
 
 	def get_positions(self, symbols=False, equities=False, options=False):
 		'''

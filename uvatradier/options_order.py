@@ -1,3 +1,5 @@
+import re
+
 from .base import Tradier
 
 import requests

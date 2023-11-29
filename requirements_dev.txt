@@ -1,0 +1,21 @@
+-r requirements.txt
+
+# Unit Test modules
+pytest
+pytest-mock
+coverage
+
+# Linting modules
+ruff
+flake8
+isort
+
+# Security checkers
+bandit
+safety
+
+# Secret Storage
+python-dotenv
+
+# Release management
+setuptools~=68.2.0

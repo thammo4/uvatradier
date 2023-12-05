@@ -1,3 +1,5 @@
+import re
+
 from .base import Tradier
 
 import requests
@@ -11,7 +13,7 @@ class OptionsOrder (Tradier):
 		# Order endpoint
 		#
 
-		self.ORDER_ENDPOINT = "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); # POST
+		self.ORDER_ENDPOINT = "v1/accounts/{}/orders".format(self.ACCOUNT_NUMBER); # POST
 
 
 	#

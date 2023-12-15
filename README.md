@@ -24,7 +24,7 @@ To install `uvatradier`, you can use `pip`:
 Steps to get started:
   * Create an account with <a href='https://tradier.com/'>Tradier.com</a>.
   * Grab Account Number and Access Token from your Tradier dashboard.
-    * Log into Tradier > Preferences (gear icon) > API Access (left panel) > [Dash or Sandbox] Account Access (section).
+    * Log into Tradier > Preferences (gear icon) > API Access (left panel) > Account Access (section).
   * Create a `.env` file in the appropriate working directory on your computer.
     * Launch text editor application.
     * Save the file as `.env`.

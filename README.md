@@ -57,6 +57,14 @@ Steps to get started:
 
       `options_order = OptionsOrder(tradier_acct, tradier_token)`
 
+  * To enable <b>live trading</b>:
+    * Modify the instantiation statements to include a third argument, `live_trade=True`.
+    * Ensure that the `tradier_acct` and `tradier_token` variables correspond to your production account. <br>
+
+      `tradier = Tradier(tradier_acct, tradier_token, live_trade=True)`
+      
+      `account = Account(tradier_acct, tradier_token, live_trade=True)`
+
 ## Usage
 
 This section provides example functionality of the existing codebase. Additional sample code demonstrating usage can be found in the `/examples/` directory.

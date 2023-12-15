@@ -45,8 +45,6 @@ Steps to get started:
       `tradier_token = os.getenv('tradier_token')`
     
   * To instantiate the class objects, use: <br>
-      `tradier = Tradier(tradier_acct, tradier_token)`
-
       `account = Account(tradier_acct, tradier_token)`
 
       `quotes = Quotes(tradier_acct, tradier_token)`

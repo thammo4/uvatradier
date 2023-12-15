@@ -4,8 +4,8 @@ import requests
 import pandas as pd
 
 class OptionsData (Tradier):
-	def __init__ (self, account_number, auth_token):
-		Tradier.__init__(self, account_number, auth_token);
+	def __init__ (self, account_number, auth_token, live_trade=False):
+		Tradier.__init__(self, account_number, auth_token, live_trade);
 
 		#
 		# Option data endpoints
@@ -39,7 +39,7 @@ class OptionsData (Tradier):
 		#
 
 		r = requests.get(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.OPTIONS_CHAIN_ENDPOINT),
+			url 	= '{}/{}'.format(self.BASE_URL, self.OPTIONS_CHAIN_ENDPOINT),
 			params 	= {'symbol':symbol, 'expiration':expiry, 'greeks':'false'},
 			headers = self.REQUESTS_HEADERS
 		);
@@ -124,7 +124,7 @@ class OptionsData (Tradier):
 		'''
 
 		r = requests.get(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.OPTIONS_EXPIRY_ENDPOINT),
+			url 	= '{}/{}'.format(self.BASE_URL, self.OPTIONS_EXPIRY_ENDPOINT),
 			params 	= {'symbol':symbol, 'includeAllRoots':True, 'strikes':str(strikes)},
 			headers = self.REQUESTS_HEADERS
 		);
@@ -211,7 +211,7 @@ class OptionsData (Tradier):
 
 
 		r = requests.get(
-			url 		= '{}/{}'.format(self.SANDBOX_URL, self.OPTIONS_SYMBOL_ENDPOINT),
+			url 		= '{}/{}'.format(self.BASE_URL, self.OPTIONS_SYMBOL_ENDPOINT),
 			params 		= {'underlying':symbol},
 			headers 	= self.REQUESTS_HEADERS
 		);

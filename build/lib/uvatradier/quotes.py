@@ -6,8 +6,8 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 
 class Quotes (Tradier):
-	def __init__ (self, account_number, auth_token):
-		Tradier.__init__(self, account_number, auth_token);
+	def __init__ (self, account_number, auth_token, live_trade=False):
+		Tradier.__init__(self, account_number, auth_token, live_trade);
 
 		#
 		# Quotes endpoints for market data about equities
@@ -40,10 +40,10 @@ class Quotes (Tradier):
 
 		Example:
 			# Create a Quotes instance
-			q = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)
+			quotes = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)
 
 			# Retrieve historical stock data for symbol 'BIIB'
-			historical_data = q.get_historical_quotes(symbol='BIIB')
+			historical_data = quotes.get_historical_quotes(symbol='BIIB')
 
 			Sample Output:
 			         date    open     high     low   close   volume
@@ -79,7 +79,7 @@ class Quotes (Tradier):
 			start_date = last_monday(tmp).strftime('%Y-%m-%d');
 
 		r = requests.get(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.QUOTES_HISTORICAL_ENDPOINT),
+			url 	= '{}/{}'.format(self.BASE_URL, self.QUOTES_HISTORICAL_ENDPOINT),
 			params 	= {
 				'symbol' 	: symbol,
 				'interval' 	: interval,
@@ -108,8 +108,11 @@ class Quotes (Tradier):
 									   or just the last price as a float if last_price is set to True.
 
 		Example:
+			# Create a Quotes instance
+			quotes = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)
+
 			# Retrieve current quote data for symbol 'CCL' and transpose the DataFrame for easy viewing
-			quote_data = q.get_quote_day(symbol='CCL').T
+			quote_data = quotes.get_quote_day(symbol='CCL').T
 
 			Sample Output:
 			                           0
@@ -142,12 +145,12 @@ class Quotes (Tradier):
 			root_symbols           CCL
 
 			# Retrieve only the last price for symbol 'CCL'
-			last_price = q.get_quote_day(symbol='CCL', last_price=True)
+			last_price = quotes.get_quote_day(symbol='CCL', last_price=True)
 			Sample Output: 15.73
 		'''
 
 		r = requests.get(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.QUOTES_ENDPOINT),
+			url 	= '{}/{}'.format(self.BASE_URL, self.QUOTES_ENDPOINT),
 			params 	= {'symbols':symbol, 'greeks':'false'},
 			headers = self.REQUESTS_HEADERS
 		);
@@ -190,7 +193,7 @@ class Quotes (Tradier):
 			r_params['end'] = end_time;
 
 		r = requests.get(
-			url = '{}/{}'.format(self.SANDBOX_URL, self.QUOTES_TIMESALES_ENDPOINT),
+			url = '{}/{}'.format(self.BASE_URL, self.QUOTES_TIMESALES_ENDPOINT),
 			params = r_params,
 			headers = self.REQUESTS_HEADERS
 		);
@@ -221,7 +224,7 @@ class Quotes (Tradier):
 			return "Need that search term yo";
 
 		r = requests.get(
-			url = '{}/{}'.format(self.SANDBOX_URL, self.QUOTES_SEARCH_ENDPOINT),
+			url = '{}/{}'.format(self.BASE_URL, self.QUOTES_SEARCH_ENDPOINT),
 			params = {'q': query, 'indexes':'false'},
 			headers = self.REQUESTS_HEADERS
 		);

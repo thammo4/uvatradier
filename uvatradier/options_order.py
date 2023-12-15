@@ -1,19 +1,17 @@
-import re
-
 from .base import Tradier
 
 import requests
 import pandas as pd
 
 class OptionsOrder (Tradier):
-	def __init__ (self, account_number, auth_token):
-		Tradier.__init__(self, account_number, auth_token);
+	def __init__ (self, account_number, auth_token, live_trade=False):
+		Tradier.__init__(self, account_number, auth_token, live_trade);
 
 		#
 		# Order endpoint
 		#
 
-		self.ORDER_ENDPOINT = "v1/accounts/{}/orders".format(self.ACCOUNT_NUMBER); # POST
+		self.ORDER_ENDPOINT = "v1/accounts/{}/orders".format(ACCOUNT_NUMBER); # POST
 
 
 	#
@@ -27,7 +25,7 @@ class OptionsOrder (Tradier):
 				option0: OCC symbol of
 		'''
 		r = requests.post(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
+			url 	= '{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT),
 			data 	= {
 				'class' 			: 'multileg',
 				'symbol' 			: underlying,
@@ -70,7 +68,7 @@ class OptionsOrder (Tradier):
 						• payoff = (K1-K2) + (premium differential) < 0
 		'''
 		r = requests.post(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
+			url 	= '{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT),
 			data 	= {
 				'class' 			: 'multileg',
 				'symbol' 			: underlying,
@@ -96,7 +94,7 @@ class OptionsOrder (Tradier):
 
 	def bull_put_spread (self, underlying_symbol, option_symbol_0, quantity_0, option_symbol_1, quantity_1, duration='day'):
 		r = requests.post(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
+			url 	= '{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT),
 			data 	= {
 				'class' 			: 'multileg',
 				'symbol' 			: underlying_symbol,
@@ -120,7 +118,7 @@ class OptionsOrder (Tradier):
 
 	def bull_call_spread (self, underlying_symbol, option_symbol_0, quantity_0, option_symbol_1, quantity_1, duration='day'):
 		r = requests.post(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
+			url 	= '{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT),
 			data 	= {
 				'class' 			: 'multileg',
 				'symbol' 			: underlying_symbol,
@@ -196,7 +194,7 @@ class OptionsOrder (Tradier):
 			r_data['stop'] = stop_price;
 
 		r = requests.post(
-			url = '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
+			url = '{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT),
 			data = r_data,
 			headers = self.REQUESTS_HEADERS
 		);

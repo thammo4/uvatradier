@@ -51,7 +51,7 @@ class EquityOrder (Tradier):
 			r_params['stop'] = stop_price;
 
 		r = requests.post(
-			url = '{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
+			url = '{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT),
 			params = r_params,
 			headers=self.REQUESTS_HEADERS
 		);

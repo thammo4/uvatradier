@@ -4,8 +4,8 @@ import pandas as pd
 from .base import Tradier
 
 class Account (Tradier):
-	def __init__ (self, account_number, auth_token):
-		Tradier.__init__(self, account_number, auth_token);
+	def __init__ (self, account_number, auth_token, live_trade=False):
+		Tradier.__init__(self, account_number, auth_token, live_trade);
 		
 		#
 		# Account endpoints
@@ -38,13 +38,16 @@ class Account (Tradier):
 		    pandas.DataFrame: A DataFrame containing user profile information.
 
 		Example:
+			# Initialize Account object
+			account = Account(ACCOUNT_NUMBER, AUTH_TOKEN)
+
 		    # Retrieve user profile information
-		    user_profile = get_user_profile()
+		    user_profile = account.get_user_profile()
 		    transposed_profile = user_profile.T  # Transpose the DataFrame for easy viewing.
 
 		Example DataFrame (transposed):
 
-			id              				id-sb-2r01lpprbg
+			id              				id-lq-4h71lpfybz
 			name               				Fat Albert
 			account.account_number     		ABC1234567
 			account.classification   		individual
@@ -56,7 +59,7 @@ class Account (Tradier):
 			account.last_update_date 		2021-06-23T22:04:20.000Z
 		'''
 		r = requests.get(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.PROFILE_ENDPOINT),
+			url 	= '{}/{}'.format(self.BASE_URL, self.PROFILE_ENDPOINT),
 			params 	= {},
 			headers = self.REQUESTS_HEADERS
 		);
@@ -77,8 +80,11 @@ class Account (Tradier):
 		    pandas.DataFrame: A DataFrame containing account balance information.
 
 		Example:
+			# Initialize Account object
+			account = Account(ACCOUNT_NUMBER, AUTH_TOKEN)
+
 		    # Retrieve account balance information
-		    account_balance = get_account_balance()
+		    account_balance = account.get_account_balance()
 		    transposed_balance = account_balance.T  # Transpose the DataFrame for easy viewing.
 
 		Example DataFrame (transposed):
@@ -109,7 +115,7 @@ class Account (Tradier):
 			margin.sweep                   0
 		'''
 		r = requests.get(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.ACCOUNT_BALANCE_ENDPOINT),
+			url 	= '{}/{}'.format(self.BASE_URL, self.ACCOUNT_BALANCE_ENDPOINT),
 			params 	= {},
 			headers = self.REQUESTS_HEADERS
 		);
@@ -126,7 +132,7 @@ class Account (Tradier):
 			Returns:
 				Pandas dataframe with columns [close_date, cost, gain_loss, gain_loss_percent, open_date, proceeds, quantity, symbol, term]
 
-			Example:
+			Example Output:
 				>>> account.get_gainloss().head()
 						close_date      cost  gain_loss  gain_loss_percent                 open_date  proceeds  quantity              symbol  term
 				0  2023-09-13T00:00:00.000Z  194700.0   -30600.0             -15.72  2023-08-25T00:00:00.000Z  164100.0      10.0  LMT240119C00260000    19
@@ -136,7 +142,7 @@ class Account (Tradier):
 				4  2023-09-06T00:00:00.000Z   16967.0     -193.0              -1.14  2023-09-01T00:00:00.000Z   16774.0     100.0                 TXN     5
 		'''
 		r = requests.get(
-			url = '{}/{}'.format(self.SANDBOX_URL, self.ACCOUNT_GAINLOSS_ENDPOINT),
+			url = '{}/{}'.format(self.BASE_URL, self.ACCOUNT_GAINLOSS_ENDPOINT),
 			params = {},
 			headers = self.REQUESTS_HEADERS
 		);
@@ -172,14 +178,15 @@ class Account (Tradier):
 		'''
 
 		r = requests.get(
-			url='{}/{}'.format(self.SANDBOX_URL, self.ORDER_ENDPOINT),
+			url='{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT),
 			params={'includeTags':'true'},
 			headers=self.REQUESTS_HEADERS
 		);
 
-		# return pd.DataFrame(r.json()['orders']);
-		return pd.json_normalize(r.json()['orders']['order']);
+		if r.json()['orders'] == 'null':
+			return 'You have no current orders.'
 
+		return pd.json_normalize(r.json()['orders']['order'])
 
 	def get_positions(self, symbols=False, equities=False, options=False):
 		'''
@@ -205,19 +212,22 @@ class Account (Tradier):
 								the specified criteria.
 
 		Example:
+			# Initialize Account object
+			account = Account('TRADIER_ACCOUNT_NUMBER', 'TRADIER_AUTH_TOKEN')
+
 			# Retrieve all positions without filtering
-			all_positions = get_positions()
+			all_positions = account.get_positions()
 
 			# Retrieve positions for specific symbols ('AAPL', 'GOOGL')
-			specific_positions = get_positions(symbols=['AAPL', 'GOOGL'])
+			specific_positions = account.get_positions(symbols=['AAPL', 'GOOGL'])
 
 			# Retrieve only equities
-			equities_positions = get_positions(equities=True)
+			equities_positions = account.get_positions(equities=True)
 
 			# Retrieve only options
-			options_positions = get_positions(options=True)
+			options_positions = account.get_positions(options=True)
 		'''
-		r = requests.get(url='{}/{}'.format(self.SANDBOX_URL, self.ACCOUNT_POSITIONS_ENDPOINT), params={}, headers=self.REQUESTS_HEADERS);
+		r = requests.get(url='{}/{}'.format(self.BASE_URL, self.ACCOUNT_POSITIONS_ENDPOINT), params={}, headers=self.REQUESTS_HEADERS);
 		if r.json():
 			positions_df = pd.DataFrame(r.json()['positions']['position']);
 			if symbols:

@@ -1,5 +1,5 @@
 class Tradier:
-	def __init__ (self, account_number, auth_token):
+	def __init__ (self, account_number, auth_token, live_trade=False):
 
 		#
 		# Define account credentials
@@ -11,7 +11,10 @@ class Tradier:
 
 		
 		#
-		# Define base url for paper trading and individual API endpoints
+		# Define base url for live/paper trading and individual API endpoints
 		#
 
-		self.SANDBOX_URL = 'https://sandbox.tradier.com';
+		self.LIVETRADE_URL 	= 'https://api.tradier.com';
+		self.SANDBOX_URL 	= 'https://sandbox.tradier.com';
+
+		self.BASE_URL 		= self.LIVETRADE_URL if live_trade else self.SANDBOX_URL;

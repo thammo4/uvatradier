@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: uvatradier
-Version: 0.2.1
+Version: 0.2.2
 Summary: wahoowah
 Home-page: https://github.com/thammo4/uvatradier
 Author: tom hammons
@@ -35,7 +35,7 @@ To install `uvatradier`, you can use `pip`:
 Steps to get started:
   * Create an account with <a href='https://tradier.com/'>Tradier.com</a>.
   * Grab Account Number and Access Token from your Tradier dashboard.
-    * Log into Tradier > Preferences (gear icon) > API Access (left panel) > Sandbox Account Access (section).
+    * Log into Tradier > Preferences (gear icon) > API Access (left panel) > Account Access (section).
   * Create a `.env` file in the appropriate working directory on your computer.
     * Launch text editor application.
     * Save the file as `.env`.
@@ -56,8 +56,6 @@ Steps to get started:
       `tradier_token = os.getenv('tradier_token')`
     
   * To instantiate the class objects, use: <br>
-      `tradier = Tradier(tradier_acct, tradier_token)`
-
       `account = Account(tradier_acct, tradier_token)`
 
       `quotes = Quotes(tradier_acct, tradier_token)`
@@ -67,6 +65,14 @@ Steps to get started:
       `options_data = OptionsData(tradier_acct, tradier_token`
 
       `options_order = OptionsOrder(tradier_acct, tradier_token)`
+
+  * To enable <b>live trading</b>:
+    * Modify the instantiation statements to include a third argument, `live_trade=True`.
+    * Ensure that the `tradier_acct` and `tradier_token` variables correspond to your production account. <br>
+
+      `tradier = Tradier(tradier_acct, tradier_token, live_trade=True)`
+      
+      `account = Account(tradier_acct, tradier_token, live_trade=True)`
 
 ## Usage
 

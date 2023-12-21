@@ -12,4 +12,5 @@ uvatradier/tradier.py
 uvatradier.egg-info/PKG-INFO
 uvatradier.egg-info/SOURCES.txt
 uvatradier.egg-info/dependency_links.txt
+uvatradier.egg-info/requires.txt
 uvatradier.egg-info/top_level.txt

@@ -6,7 +6,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setup(
 	name='uvatradier',
-	version='0.2.2',
+	version='0.2.3',
 	author='tom hammons',
 	description='wahoowah',
 	long_description=long_description,

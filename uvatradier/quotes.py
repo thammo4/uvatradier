@@ -55,6 +55,15 @@ class Quotes (Tradier):
 		'''
 
 		#
+		# Ensure that provided symbol is in uppercase format
+		#
+
+		if not symbol:
+			return 'No ticker symbol provided.';
+
+		symbol = symbol.upper();
+
+		#
 		# Helper function used to index the start of the trading week
 		#
 
@@ -149,6 +158,11 @@ class Quotes (Tradier):
 			Sample Output: 15.73
 		'''
 
+		if not symbol:
+			return 'No ticker symbol provided';
+
+		symbol = symbol.upper();
+
 		r = requests.get(
 			url 	= '{}/{}'.format(self.BASE_URL, self.QUOTES_ENDPOINT),
 			params 	= {'symbols':symbol, 'greeks':'false'},
@@ -186,6 +200,13 @@ class Quotes (Tradier):
 
 				(vwap = volume weighted average price during the interval)
 		'''
+
+		if not symbol:
+			return 'No ticker symbol provided';
+
+		symbol = symbol.upper();
+
+
 		r_params = {'symbol':symbol};
 		if start_time:
 			r_params['start'] = start_time;

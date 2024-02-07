@@ -1,13 +1,15 @@
 Metadata-Version: 2.1
 Name: uvatradier
-Version: 0.2.3
-Summary: wahoowah
+Version: 0.2.4
+Summary: wahoowa
 Home-page: https://github.com/thammo4/uvatradier
 Author: tom hammons
 Project-URL: Bug Tracker, https://github.com/thammo4/uvatradier/issues
 Keywords: tradier finance api
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: requests>=2.0
+Requires-Dist: pandas>=1.0
 
 # uvatradier
 

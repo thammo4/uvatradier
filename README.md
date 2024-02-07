@@ -4,7 +4,7 @@
 
 The package was originally developed by data science graduate students at the University of Virginia.
 
-Wahoowah.
+Wahoowa.
 
 ## Features
 

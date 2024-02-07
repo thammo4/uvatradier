@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: uvatradier
-Version: 0.2.4
+Version: 0.2.5
 Summary: wahoowa
 Home-page: https://github.com/thammo4/uvatradier
 Author: tom hammons
@@ -17,7 +17,7 @@ Requires-Dist: pandas>=1.0
 
 The package was originally developed by data science graduate students at the University of Virginia.
 
-Wahoowah.
+Wahoowa.
 
 ## Features
 

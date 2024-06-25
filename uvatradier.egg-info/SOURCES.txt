@@ -5,6 +5,7 @@ uvatradier/__init__.py
 uvatradier/account.py
 uvatradier/base.py
 uvatradier/equity_order.py
+uvatradier/market_stream.py
 uvatradier/options_data.py
 uvatradier/options_order.py
 uvatradier/quotes.py

@@ -229,7 +229,7 @@ class Account (Tradier):
 		'''
 		r = requests.get(url='{}/{}'.format(self.BASE_URL, self.ACCOUNT_POSITIONS_ENDPOINT), params={}, headers=self.REQUESTS_HEADERS);
 		if r.json():
-			positions_df = pd.DataFrame(r.json()['positions']['position']);
+			positions_df = pd.DataFrame(pd.json_normalize(r.json()['positions']['position']));
 			if symbols:
 				positions_df = positions_df.query('symbol in @symbols');
 			if equities:

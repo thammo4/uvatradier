@@ -2,6 +2,7 @@ from .base import Tradier
 
 import requests
 import pandas as pd
+import re
 
 class OptionsOrder (Tradier):
 	def __init__ (self, account_number, auth_token, live_trade=False):

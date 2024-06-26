@@ -227,14 +227,32 @@ class Account (Tradier):
 			# Retrieve only options
 			options_positions = account.get_positions(options=True)
 		'''
-		r = requests.get(url='{}/{}'.format(self.BASE_URL, self.ACCOUNT_POSITIONS_ENDPOINT), params={}, headers=self.REQUESTS_HEADERS);
-		if r.json():
-			positions_df = pd.DataFrame(pd.json_normalize(r.json()['positions']['position']));
-			if symbols:
-				positions_df = positions_df.query('symbol in @symbols');
-			if equities:
-				positions_df = positions_df[positions_df['symbol'].str.len() < 5];
-				options = False;
-			if options:
-				positions_df = positions_df[positions_df['symbol'].str.len() > 5];
-			return positions_df;
+		try:
+			r = requests.get(url='{}/{}'.format(self.BASE_URL, self.ACCOUNT_POSITIONS_ENDPOINT), params={}, headers=self.REQUESTS_HEADERS);
+			r.raise_for_status();
+			data = r.json();
+		except requests.exceptions.RequestException as e:
+			print(f"Get Positions Request Failed: {e}");
+			return pd.DataFrame();
+		except ValueError as e:
+			print(f"JSON decode error [getPositions]: {e}");
+			return pd.DataFrame();
+
+		if data:
+			if 'positions' in data:
+				if 'position' in data['positions']:
+					positions_df = pd.DataFrame(pd.json_normalize(data['positions']['position']));
+					if symbols:
+						positions_df = positions_df.query('symbol in @symbols');
+					if equities:
+						positions_df = positions_df[positions_df['symbol'].str.len() < 5];
+						options = False;
+					if options:
+						positions_df = positions_df[positions_df['symbol'].str.len() > 5];
+					return positions_df;
+				else:
+					return pd.DataFrame();
+			else:
+				return pd.DataFrame();
+		else:
+			return pd.DataFrame();

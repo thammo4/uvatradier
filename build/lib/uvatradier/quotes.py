@@ -18,7 +18,7 @@ class Quotes (Tradier):
 		self.QUOTES_SEARCH_ENDPOINT 		= "v1/markets/search"; 											# GET
 		self.QUOTES_TIMESALES_ENDPOINT 		= "v1/markets/timesales"; 										# GET
 
-	def get_historical_quotes (self, symbol, interval='daily', start_date=False, end_date=False):
+	def get_historical_quotes (self, symbol, interval='daily', start_date=False, end_date=False, verbose=False):
 
 		'''
 		Fetch historical stock data for a given symbol from the Tradier Account API.
@@ -87,18 +87,47 @@ class Quotes (Tradier):
 			tmp = datetime.strptime(end_date, '%Y-%m-%d');
 			start_date = last_monday(tmp).strftime('%Y-%m-%d');
 
-		r = requests.get(
-			url 	= '{}/{}'.format(self.BASE_URL, self.QUOTES_HISTORICAL_ENDPOINT),
-			params 	= {
-				'symbol' 	: symbol,
-				'interval' 	: interval,
-				'start' 	: start_date,
-				'end' 		: end_date
-			},
-			headers = self.REQUESTS_HEADERS
-		);
+		try:
 
-		return pd.DataFrame(r.json()['history']['day']);
+			r = requests.get(
+				url 	= '{}/{}'.format(self.BASE_URL, self.QUOTES_HISTORICAL_ENDPOINT),
+				params 	= {
+					'symbol' 	: symbol,
+					'interval' 	: interval,
+					'start' 	: start_date,
+					'end' 		: end_date
+				},
+				headers = self.REQUESTS_HEADERS
+			);
+			r.raise_for_status();
+
+		except requests.exceptions.RequestException as e:
+			return f"Request failed: {e}";
+
+		try:
+			data = r.json();
+		except ValueError as e:
+			return f"JSON decode issue: {str(e)}.\nResponse content: {r.text[:500]}";
+
+		if verbose:
+			print(f'DATA:\n{data}');
+
+		if not data:
+			return f"Empty response from API: {r.status_code}.";
+
+		if 'history' not in data:
+			return f"Unexpected API garb [history not in data]: {data}";
+
+		if data['history'] is None:
+			return f"Historical data returned 'None': ({symbol}, {start_date}, {end_date})";
+
+		if 'day' not in data['history']:
+			return f"No day in history data: {data['history']}.";
+
+		if 'history' not in data or 'day' not in data['history']:
+			return 'Unexpected API response.'
+
+		return pd.DataFrame(data['history']['day']);
 
 	def get_quote_day (self, symbol, last_price=False):
 		'''

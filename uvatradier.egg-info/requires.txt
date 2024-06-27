@@ -1,5 +1,0 @@
-requests>=2.0
-pandas>=1.0
-matplotlib>=3.0
-websockets>=8.1
-asyncio

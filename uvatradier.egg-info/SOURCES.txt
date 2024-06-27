@@ -9,6 +9,7 @@ uvatradier/market_stream.py
 uvatradier/options_data.py
 uvatradier/options_order.py
 uvatradier/quotes.py
+uvatradier/stream.py
 uvatradier/tradier.py
 uvatradier.egg-info/PKG-INFO
 uvatradier.egg-info/SOURCES.txt

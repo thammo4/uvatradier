@@ -16,6 +16,6 @@ class Tradier:
 
 		self.LIVETRADE_URL 		= 'https://api.tradier.com';
 		self.SANDBOX_URL 		= 'https://sandbox.tradier.com';
-		self.MARKET_STREAM_URL 	= 'wss://ws.tradier.com';
+		self.WEBSOCKET_URL 		= 'wss://ws.tradier.com';
 
 		self.BASE_URL 		= self.LIVETRADE_URL if live_trade else self.SANDBOX_URL;

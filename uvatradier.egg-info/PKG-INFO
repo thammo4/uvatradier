@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: uvatradier
-Version: 0.2.9
+Version: 0.3.0
 Summary: wahoowa
 Home-page: https://github.com/thammo4/uvatradier
 Author: tom hammons
@@ -10,6 +10,9 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: requests>=2.0
 Requires-Dist: pandas>=1.0
+Requires-Dist: matplotlib>=3.0
+Requires-Dist: websockets>=8.1
+Requires-Dist: asyncio
 
 # uvatradier
 

@@ -12,6 +12,7 @@ Wahoowa.
 - **Trading**: Place, modify, and cancel equity and option orders.
 - **Market Data**: Access real-time and historical market data for equities and options.
 - **Options Data**: Retrieve options chains, strikes, and expiration dates.
+- **Stream Market Events**: Stream market events via WebSocket.
 
 ## Installation
 
@@ -36,7 +37,7 @@ Steps to get started:
   * To authenticate yourself, add the following lines of code to the top of your python script or jupyter notebook: <br>
       `import os, dotenv`
       
-      `from uvatradier import Tradier, Account, Quotes, EquityOrder, OptionsData, OptionsOrder`
+      `from uvatradier import Tradier, Account, Quotes, EquityOrder, OptionsData, OptionsOrder, Stream`
       
       `dotenv.load_dotenv()`
       
@@ -62,6 +63,10 @@ Steps to get started:
       `tradier = Tradier(tradier_acct, tradier_token, live_trade=True)`
       
       `account = Account(tradier_acct, tradier_token, live_trade=True)`
+
+  * If live trading is enabled, then you can utilize the `Stream` class to stream market events:
+
+      `stream = Stream(tradier_acct, tradier_token, live_trade=True)`
 
 ## Usage
 
@@ -126,6 +131,16 @@ This section provides example functionality of the existing codebase. Additional
 - Get Options Expirations:
 
   `options_expirations = options_data.get_options_expirations('AAPL')`
+
+### Stream Market Events
+
+- Start market event stream for JP Morgan Chase:
+
+   `stream.stream_market_events(symbol_list=['JPM'])`
+
+- Stream Exxon Mobil market events and filter for quote updates and trade events only with a line break to separate each new event:
+
+   `stream.stream_market_events(symbol_list=['XOM'], filter_list=['trade', 'quote'], line_break=True)`
 
 ## Development
 

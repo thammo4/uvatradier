@@ -2,6 +2,9 @@ from .base import Tradier
 
 import requests
 import pandas as pd
+import re
+from datetime import datetime
+
 
 class OptionsData (Tradier):
 	def __init__ (self, account_number, auth_token, live_trade=False):

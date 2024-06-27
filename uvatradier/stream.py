@@ -6,25 +6,24 @@ import websockets;
 import json;
 
 class Stream (Tradier):
-    """
-    The Stream class provides a method to connect and stream market data in real time using Tradier's API.
-    This class extends the Tradier base class and utilizes both HTTP and WebSocket protocols to establish
-    a connection, send subscription requests, and produce incoming market events.
+	"""
+	The Stream class provides a method to connect and stream market data in real time using Tradier's API.
+	This class extends the Tradier base class and utilizes both HTTP and WebSocket protocols to establish
+	a connection, send subscription requests, and produce incoming market events.
 
-    Note - Per Tradier's documentation, WebSocket streaming is only available via live trading.
-    	   Ergo, when instantiating the class object, you need to supply the third argument live_trade
-    	   with its value set to True.
+	Note - Per Tradier's documentation, WebSocket streaming is only available via live trading.
+		   Ergo, when instantiating the class object, you need to supply the third argument live_trade with its value set to True.
 
-    Attributes:
-    - MARKET_STREAM_ENDPOINT (str): API endpoint for market event streaming.
-    - ACCOUNT_STREAM_ENDPOINT (str): API endpoint for account event streaming.
-    - MARKET_EVENTS_STREAM_ENDPOINT (str): API endpoint for specific market events.
+	Attributes:
+	- MARKET_STREAM_ENDPOINT (str): API endpoint for market event streaming.
+	- ACCOUNT_STREAM_ENDPOINT (str): API endpoint for account event streaming.
+	- MARKET_EVENTS_STREAM_ENDPOINT (str): API endpoint for specific market events.
 
-    Methods:
-    - stream_market_events: Initiates market event streaming for specified symbols.
-    - http_market_stream_connect: Establishes an HTTP connection to get a streaming session ID.
-    - ws_market_connect: Connects to a WebSocket to receive and handle live market data.
-    """
+	Methods:
+	- stream_market_events: Initiates market event streaming for specified symbols.
+	- http_market_stream_connect: Establishes an HTTP connection to get a streaming session ID.
+	- ws_market_connect: Connects to a WebSocket to receive and handle live market data.
+	"""
 	def __init__ (self, account_number, auth_token, live_trade=False):
 		"""
 		Initialize a new instance of the Stream class which is used for handling real-time

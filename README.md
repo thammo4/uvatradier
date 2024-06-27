@@ -138,9 +138,9 @@ This section provides example functionality of the existing codebase. Additional
 
    `stream.stream_market_events(symbol_list=['JPM'])`
 
-- Stream Exxon Mobil market events and filter for quote updates and trade events only with a line break to separate each new event:
+- Stream Exxon Mobil and Kinder Morgan market events and filter for quote updates and trade events only with a line break to separate each new event:
 
-   `stream.stream_market_events(symbol_list=['XOM'], filter_list=['trade', 'quote'], line_break=True)`
+   `stream.stream_market_events(symbol_list=['XOM', 'KMI'], filter_list=['trade', 'quote'], line_break=True)`
 
 ## Development
 

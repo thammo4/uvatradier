@@ -3,7 +3,7 @@ from .base import Tradier
 import requests
 import pandas as pd
 import re
-from datetime import datetime
+from datetime import datetime, timedelta;
 
 
 class OptionsData (Tradier):
@@ -103,6 +103,39 @@ class OptionsData (Tradier):
 		#
 
 		return option_df;
+
+
+	#
+	# Helper function to retrieve expiry date nearest to a fixed number of days in the future
+	#
+
+	def get_closest_expiry (self, symbol, num_days):
+		'''
+			This function returns the maturity date nearest to a fixed number of days into the future.
+			It is well suited to quickly retrieve the necessary maturity date once you've decided on your trading time-frame.
+			For example, if you want to trade mid-term contracts, you might set the num_days argument to 30.
+
+			Arguments:
+				• symbol: string ticker symbol of underlying
+				• num_days: number of days into the future for which you want the nearest maturity.
+			Returns:
+				• [string] 'YYYY-mm-dd' maturity date closest to today+num_days in future.
+
+			Example:
+				>>> datetime.today().strftime('%Y-%m-%d')
+				'2024-06-30'
+				>>> options_data = OptionsData(tradier_acct, tradier_token)
+				>>> options_data.get_closest_expiry(symbol='XOM', num_days=30)
+				'2024-08-02'
+		'''
+		expiry_dates = self.get_expiry_dates(symbol);
+		todays_date = datetime.now();
+		future_date = todays_date + timedelta(days=num_days);
+		expiries_dt = [datetime.strptime(d, "%Y-%m-%d") for d in expiry_dates];
+		closest_expiry = min(expiries_dt, key=lambda date: abs(date-future_date));
+
+		return closest_expiry.strftime("%Y-%m-%d");
+
 
 
 	def get_expiry_dates (self, symbol, strikes=False):

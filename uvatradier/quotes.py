@@ -4,6 +4,7 @@ import requests
 import datetime
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+import warnings;
 
 class Quotes (Tradier):
 	def __init__ (self, account_number, auth_token, live_trade=False):
@@ -150,7 +151,7 @@ class Quotes (Tradier):
 			quotes = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)
 
 			# Retrieve current quote data for symbol 'CCL' and transpose the DataFrame for easy viewing
-			quote_data = quotes.get_quote_day(symbol='CCL').T
+			ccl_quote = quotes.get_quote_day(symbol='CCL').T
 
 			Sample Output:
 			                           0
@@ -187,23 +188,51 @@ class Quotes (Tradier):
 			Sample Output: 15.73
 		'''
 
-		if not symbol:
-			return 'No ticker symbol provided';
+		if not isinstance(symbol, str):
+			return "Symbol needs to be a string (duh?)";
 
 		symbol = symbol.upper();
 
-		r = requests.get(
-			url 	= '{}/{}'.format(self.BASE_URL, self.QUOTES_ENDPOINT),
-			params 	= {'symbols':symbol, 'greeks':'false'},
-			headers = self.REQUESTS_HEADERS
-		);
+		try:
 
-		df_quote = pd.json_normalize(r.json()['quotes']['quote']);
+			r = requests.get(
+				url 	= f"{self.BASE_URL}/{self.QUOTES_ENDPOINT}",
+				params 	= {'symbols':symbol, 'greeks':'false'},
+				headers = self.REQUESTS_HEADERS
+			);
+			r.raise_for_status();
 
-		if last_price:
-			return float(df_quote['last']);
+			quote_json = r.json();
+			if quote_json is None or 'quotes' not in quote_json:
+				print('API Response Lacks quotes key.');
+				return pd.DataFrame();
 
-		return df_quote;
+			quote_dict = quote_json['quotes'];
+			if quote_dict is None or 'quote' not in quote_dict:
+				print(f'No quote data for: {symbol}.');
+				return pd.DataFrame();
+
+			quote_data = quote_dict['quote'];
+
+			df_quote = pd.json_normalize(quote_data);
+
+			if last_price:
+				if not isinstance(last_price, bool):
+					print("YO! ... Second argument 'last_price' should be bool.");
+				if 'last' not in df_quote:
+					return f"No last price found: {symbol}.";
+				return float(df_quote['last']);
+
+			return df_quote;
+
+		except requests.exceptions.RequestException as e:
+			return f"API Request Failed: {str(e)}.";
+		except ValueError as e:
+			return f"API Response Parse Error: {str(e)}.";
+		except KeyError as e:
+			return f"Unexpected API Response Structure: {str(e)}.";
+		except Exception as e:
+			return f"Something has gone terribly wrong: {str(e)}";
 
 	def get_quote_data (self, symbol_list):
 		'''

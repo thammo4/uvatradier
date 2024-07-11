@@ -133,7 +133,7 @@ class Quotes (Tradier):
 		'''
 		Fetch the current quote data for a given symbol from the Tradier Account API.
 
-		This function makes a GET request to the Tradier Account API to retrieve the current quote
+		This function makes a GET request to the Tradier Market Data API to retrieve the current quote
 		data for a specified symbol.
 
 		Args:
@@ -204,6 +204,138 @@ class Quotes (Tradier):
 			return float(df_quote['last']);
 
 		return df_quote;
+
+	def get_quote_data (self, symbol_list):
+		'''
+		Retrieve a dataframe with current quote data for a specified list of stock symbols.
+		The returned DataFrame can be used to quickly compare properties of different stocks side-by-side.
+
+		Args:
+			• symbol (list):
+				• List whose elements are strings that denote the desired symbol ['ONE', 'TWO', 'ETC']
+
+		Returns:
+			• pandas.DataFrame:
+				• (DF) A DataFrame containing the current quote data for the specified symbol list.
+
+		Example:
+			# Create a Quotes instance
+			quotes = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)
+
+			# Retrieve current quote data for Citi Group, JP Morgan, and Goldman Sachs
+			quotes.get_quote_data(symbol_list=['C', 'JPM', 'GS'])
+
+			Sample Output: (transposed to show full field list)
+			                               0                    1                            2
+			symbol                         C                  JPM                           GS
+			description        Citigroup Inc  JPMorgan Chase & Co  The Goldman Sachs Group Inc
+			exch                           N                    N                            N
+			type                       stock                stock                        stock
+			last                      65.605               207.75                     478.7975
+			change                     -1.38                -0.05                         -0.1
+			volume                  13189182              6467719                      1349715
+			open                      66.185               206.21                        480.0
+			high                        66.5                208.1                       483.16
+			low                       65.305               205.38                       476.27
+			close                       None                 None                         None
+			bid                         65.6               207.74                       478.66
+			ask                        65.61               207.76                       478.93
+			change_percentage          -2.06                -0.03                        -0.02
+			average_volume          19151906             10767333                      2817983
+			last_volume                  100                  100                          100
+			trade_date         1720726003419        1720726004190                1720725986965
+			prevclose                  66.98                207.8                       478.89
+			week_52_high               66.99               210.38                       479.86
+			week_52_low                38.17               135.19                     289.3568
+			bidsize                       17                    1                            1
+			bidexch                        Q                    P                            Z
+			bid_date           1720725998000        1720726003000                1720726003000
+			asksize                        8                    2                            2
+			askexch                        N                    Q                            M
+			ask_date           1720726003000        1720726001000                1720726001000
+			root_symbols                   C                  JPM                       GS,GS1
+		'''
+
+		#
+		# Sanity check
+		#
+
+		if not symbol_list or symbol_list is None:
+			print('Nothing given nothing gained.');
+			return pd.DataFrame();
+
+		#
+		# For convenience, we'll just convert the singular case to a list
+		#
+
+		if isinstance(symbol_list, str):
+			symbol_list = [symbol_list];
+
+		#
+		# Check that the user didn't provide junk symbols
+		#
+
+		valid_symbols = [];
+		for s in symbol_list:
+			if not isinstance(s, str):
+				print(f"symbols only 'round these parts: {s} ({type(s)})");
+			else:
+				valid_symbols.append(s.upper());
+
+		str_symbols = ",".join(valid_symbols);
+		print(f"Making call with: {str_symbols}");
+
+		if not str_symbols:
+			print("No ticker symbols?");
+			return pd.DataFrame();
+
+		try:
+			r = requests.get(
+				url = f"{self.BASE_URL}/{self.QUOTES_ENDPOINT}",
+				params = {"symbols":str_symbols, "greeks":"false"},
+				headers = self.REQUESTS_HEADERS
+			);
+			r.raise_for_status();
+
+			quotes_json = r.json();
+			print(f'QUOTES JSON:\n{quotes_json}\n');
+
+			if quotes_json is None or 'quotes' not in quotes_json:
+				print("API Response Error [1]: No 'quotes' key");
+				print(quotes_json);
+				return pd.DataFrame();
+
+			quotes_dict = quotes_json['quotes'];
+			print(f'QUOTES DICT:\n{quotes_dict}\n');
+
+			if quotes_dict is None or 'quote' not in quotes_dict:
+				print("API Response Error [2]: No 'quote' key");
+				print(quotes_dict);
+				return pd.DataFrame();
+
+			quotes_data = quotes_dict['quote'];
+			print(f'QUOTES DATA:\n{quotes_data}\n');
+
+			if not quotes_data:
+				print('No quotes data.');
+				quotes_df = pd.DataFrame();
+			else:
+				quotes_df = pd.json_normalize(quotes_data);
+
+			return quotes_df;
+
+		except requests.exceptions.RequestException as e:
+			print(f'Failed API Request: {str(e)}.');
+			return pd.DataFrame();
+		except ValueError as e:
+			print(f"API Response Parse Issue: {str(e)}.");
+			return pd.DataFrame();
+		except KeyError as e:
+			print(f"Unexpected API response: {str(e)}.");
+			return pd.DataFrame();
+		except Exception as e:
+			print(f"Something terrible as happened: {str(e)}.");
+			pd.DataFrame();
 
 	def get_timesales (self, symbol, interval='1min', start_time=False, end_time=False):
 		'''

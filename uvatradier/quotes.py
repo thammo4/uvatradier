@@ -312,7 +312,6 @@ class Quotes (Tradier):
 				valid_symbols.append(s.upper());
 
 		str_symbols = ",".join(valid_symbols);
-		print(f"Making call with: {str_symbols}");
 
 		if not str_symbols:
 			print("No ticker symbols?");
@@ -327,7 +326,6 @@ class Quotes (Tradier):
 			r.raise_for_status();
 
 			quotes_json = r.json();
-			print(f'QUOTES JSON:\n{quotes_json}\n');
 
 			if quotes_json is None or 'quotes' not in quotes_json:
 				print("API Response Error [1]: No 'quotes' key");
@@ -335,7 +333,6 @@ class Quotes (Tradier):
 				return pd.DataFrame();
 
 			quotes_dict = quotes_json['quotes'];
-			print(f'QUOTES DICT:\n{quotes_dict}\n');
 
 			if quotes_dict is None or 'quote' not in quotes_dict:
 				print("API Response Error [2]: No 'quote' key");
@@ -343,7 +340,6 @@ class Quotes (Tradier):
 				return pd.DataFrame();
 
 			quotes_data = quotes_dict['quote'];
-			print(f'QUOTES DATA:\n{quotes_data}\n');
 
 			if not quotes_data:
 				print('No quotes data.');

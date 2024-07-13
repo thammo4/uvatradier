@@ -88,7 +88,6 @@ class OptionsOrder (Tradier):
 		return r.json();
 
 
-
 	#
 	# Bull-put spread
 	#
@@ -138,7 +137,6 @@ class OptionsOrder (Tradier):
 		return r.json();
 
 
-	# def extract_stock_symbol (self, occ_symbol):
 	def extract_occ_underlying (self, occ_symbol):
 		match = re.match(r'^([A-Z]){1,4}\d', occ_symbol);
 		if match:

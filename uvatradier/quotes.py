@@ -189,7 +189,8 @@ class Quotes (Tradier):
 		'''
 
 		if not isinstance(symbol, str):
-			return "Symbol needs to be a string (duh?)";
+			quote_columns = ['symbol', 'description', 'exch', 'type', 'last', 'change', 'volume', 'open', 'high', 'low', 'close', 'bid', 'ask', 'change_percentage', 'average_volume', 'last_volume', 'trade_date', 'prevclose', 'week_52_high', 'week_52_low', 'bidsize', 'bidexch', 'bid_date', 'asksize', 'askexch', 'ask_date', 'root_symbols'];
+			return pd.DataFrame({col:[] for col in quote_columns});
 
 		symbol = symbol.upper();
 

@@ -159,11 +159,29 @@ class OptionsData (Tradier):
 			[{'date': '2023-09-08', 'strikes': {'strike': [59.0, 60.0, 61.0, ...]}, {'date': '2023-09-15', 'strikes': {'strike': [55.0, 60.0, ...}}, ...]
 		'''
 
-		r = requests.get(
-			url 	= '{}/{}'.format(self.BASE_URL, self.OPTIONS_EXPIRY_ENDPOINT),
-			params 	= {'symbol':symbol, 'includeAllRoots':True, 'strikes':str(strikes)},
-			headers = self.REQUESTS_HEADERS
-		);
+		try:
+			r = requests.get(
+				url 	= '{}/{}'.format(self.BASE_URL, self.OPTIONS_EXPIRY_ENDPOINT),
+				params 	= {'symbol':symbol, 'includeAllRoots':True, 'strikes':str(strikes)},
+				headers = self.REQUESTS_HEADERS
+			);
+			r.raise_for_status();
+		except requests.exceptions.RequestException as e:
+			raise RuntimeError(f"No expiries for {symbol}: {str(e)}.");
+
+		try:
+			response_data = r.json()['expirations'];
+		except KeyError:
+			raise ValueError(f"API Response Error. No expirations: {r.json()}");
+
+		if not response_data:
+			print(f"No expiries: {symbol}");
+			return list();
+
+		if not strikes:
+			return response_data['date'];
+
+		return response_data;
 
 		if r.status_code != 200:
 			return 'wtf';

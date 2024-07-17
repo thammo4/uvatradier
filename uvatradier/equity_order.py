@@ -5,8 +5,8 @@ import pandas as pd
 
 
 class EquityOrder (Tradier):
-	def __init__ (self, account_number, auth_token):
-		Tradier.__init__(self, account_number, auth_token);
+	def __init__ (self, account_number, auth_token, live_trade=False):
+		Tradier.__init__(self, account_number, auth_token, live_trade);
 
 		#
 		# Order endpoint

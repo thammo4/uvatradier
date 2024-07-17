@@ -50,7 +50,7 @@ Steps to get started:
 
       `quotes = Quotes(tradier_acct, tradier_token)`
 
-      `equity_order = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)`
+      `equity_order = EquityOrder(tradier_acct, tradier_token)`
 
       `options_data = OptionsData(tradier_acct, tradier_token`
 
@@ -63,6 +63,10 @@ Steps to get started:
       `tradier = Tradier(tradier_acct, tradier_token, live_trade=True)`
       
       `account = Account(tradier_acct, tradier_token, live_trade=True)`
+
+      `equity_order = EquityOrder(tradier_acct, tradier_token, live_trade=True)`
+
+      `options_order = OptionsOrder(tradier_acct, tradier_token, live_trade=True)`
 
   * If live trading is enabled, then you can utilize the `Stream` class to stream market events:
 

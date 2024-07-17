@@ -50,7 +50,7 @@ Steps to get started:
 
       `quotes = Quotes(tradier_acct, tradier_token)`
 
-      `equity_order = EquityOrder(tradier_acct, tradier_token)`
+      `equity_order = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)`
 
       `options_data = OptionsData(tradier_acct, tradier_token`
 
@@ -98,8 +98,8 @@ This section provides example functionality of the existing codebase. Additional
 
 - Place Equity Order:
 
-  `order_response = equity_order.place_order('AAPL', 'buy', 1, 'limit', 150)`
-
+  `order_response = equity_order.order(symbol='QQQ', side='buy', quantity=10, order_type='market', duration='gtc');`
+  
 - Place Options Order:
 
   `order_response = options_order.place_order('AAPL210917C00125000', 'buy_to_open', 1, 'limit', 3.5)`

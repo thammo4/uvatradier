@@ -62,6 +62,42 @@ class EquityOrder (Tradier):
 			headers = self.REQUESTS_HEADERS,
 		);
 		return r.json();
+
+	def modify(self, order_id, order_type=False, duration=False, limit_price=False, stop_price=False):
+		'''
+			Arguments:
+				order_id	= 12345678'
+				order_type	= ['market', 'limit', 'stop', 'stop_limit']
+				duration 	= ['day', 'gtc', 'pre', 'post']
+				limit_price	= 1.0
+				stop_price	= 1.0
+
+			Example of how to run:
+				>>> eo = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)
+				>>> eo.modify(12345678, limit_price=433.27)
+				{'order': {'id': 12345678, 'status': 'ok', 'partner_id': 'c4998eb7-06e8-4820-a7ab-55d9760065fb'}}
+		'''
+
+		#
+		# To modify an order user should only input fields that should be changed.
+		# Only send a field if it is reuqired and provided.
+		#
+		
+		r_params = {};
+		if order_type is not False:
+			r_params['type'] = order_type
+		if duration is not False:
+			r_params['duration'] = duration
+		if limit_price is not False:
+			r_params['price'] = limit_price
+		if stop_price is not False:
+			r_params['stop'] = stop_price
+
+		r = requests.put(
+			url = '{}/{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT, order_id),
+			headers = self.REQUESTS_HEADERS,
+		);
+		return r.json();
 	
 	def order (self, symbol, side, quantity, order_type, duration='day', limit_price=False, stop_price=False, preview=False):
 		'''
@@ -77,7 +113,7 @@ class EquityOrder (Tradier):
 			Example of how to run:
 				>>> eo = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)
 				>>> eo.order(symbol='QQQ', side='buy', quantity=10, order_type='market', duration='gtc');
-				{'order': {'id': 8256590, 'status': 'ok', 'partner_id': '3a8bbee1-5184-4ffe-8a0c-294fbad1aee9'}}
+				{'order': {'id': 8256590, 'status': 'ok', 'partner_id': 'c4998eb7-06e8-4820-a7ab-55d9760065fb'}}
 		'''
 
 		#

@@ -13,7 +13,56 @@ class EquityOrder (Tradier):
 		#
 
 		self.ORDER_ENDPOINT = "v1/accounts/{}/orders".format(self.ACCOUNT_NUMBER); # POST
+	def fetch(self, order_id):
+		'''
+			Arguments:
+				order_id	= 12345678'
 
+			Example of how to run:
+				>>> eo = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)
+				>>> eo.fetch(12345678)
+				{'order': {
+					'id': 12345678,
+					'type': 'limit',
+					'symbol': 'QQQ',
+					'side': 'buy',
+					'quantity': 1.0,
+					'status': 'open',
+					'duration': 'post',
+					'price': 1.0,
+					'avg_fill_price': 0.0,
+					'exec_quantity': 0.0,
+					'last_fill_price': 0.0,
+					'last_fill_quantity': 0.0,
+					'remaining_quantity': 1.0,
+					'create_date': '2024-01-01T00:00:00.000Z',
+					'transaction_date': '2024-01-01T00:00:00.000Z',
+					'class': 'equity'
+					}
+				}
+		'''
+		r = requests.get(
+			url = '{}/{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT, order_id),
+			headers = self.REQUESTS_HEADERS,
+		);
+		return r.json();
+
+	def delete(self, order_id):
+		'''
+			Arguments:
+				order_id	= 12345678'
+
+			Example of how to run:
+				>>> eo = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)
+				>>> eo.delete(12345678)
+				{'order': {'id': 12345678, 'status': 'ok'}}
+		'''
+		r = requests.delete(
+			url = '{}/{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT, order_id),
+			headers = self.REQUESTS_HEADERS,
+		);
+		return r.json();
+	
 	def order (self, symbol, side, quantity, order_type, duration='day', limit_price=False, stop_price=False, preview=False):
 		'''
 			Arguments:
@@ -53,7 +102,7 @@ class EquityOrder (Tradier):
 		if order_type.lower() in ['stop', 'stop_limit']:
 			r_params['stop'] = stop_price;
 		if preview:
-                        r_params['preview'] = True
+			r_params['preview'] = True
 
 		r = requests.post(
 			url = '{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT),

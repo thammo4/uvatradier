@@ -102,8 +102,20 @@ This section provides example functionality of the existing codebase. Additional
 
 - Place Equity Order:
 
-  `order_response = equity_order.order(symbol='QQQ', side='buy', quantity=10, order_type='market', duration='gtc');`
-  
+  `order_response = equity_order.order('QQQ', 'buy', 10, 'market', duration='gtc');`
+
+- Check an Equity Order:
+
+  `order_status = equity_order.fetch(12345678)` 
+
+- Modify an Equity Order:
+
+  `mod_response = equity_order.modify(12345678, duration='gtc')`
+
+- Delete an Equity Order:
+
+  `delete_response = equity_order.delete(1234567)`
+
 - Place Options Order:
 
   `order_response = options_order.place_order('AAPL210917C00125000', 'buy_to_open', 1, 'limit', 3.5)`

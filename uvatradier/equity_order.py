@@ -14,13 +14,16 @@ class EquityOrder (Tradier):
 
 		self.ORDER_ENDPOINT = "v1/accounts/{}/orders".format(self.ACCOUNT_NUMBER); # POST
 
-	def order (self, symbol, side, quantity, order_type, duration='day', limit_price=False, stop_price=False):
+	def order (self, symbol, side, quantity, order_type, duration='day', limit_price=False, stop_price=False, preview=False):
 		'''
 			Arguments:
 				symbol 		= Stock Ticker Symbol.
 				side 		= ['buy', 'buy_to_cover', 'sell', 'sell_short']
 				order_type 	= ['market', 'limit', 'stop', 'stop_limit']
 				duration 	= ['day', 'gtc', 'pre', 'post']
+				limit_price	= 1.0
+				stop_price	= 1.0
+				preview		= True # https://documentation.tradier.com/brokerage-api/trading/preview-order
 
 			Example of how to run:
 				>>> eo = EquityOrder(ACCOUNT_NUMBER, AUTH_TOKEN)
@@ -49,6 +52,8 @@ class EquityOrder (Tradier):
 			r_params['price'] = limit_price;
 		if order_type.lower() in ['stop', 'stop_limit']:
 			r_params['stop'] = stop_price;
+		if preview:
+                        r_params['preview'] = True
 
 		r = requests.post(
 			url = '{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT),

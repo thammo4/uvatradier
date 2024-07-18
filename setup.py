@@ -6,9 +6,9 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setup(
 	name='uvatradier',
-	version='0.4.1',
+	version='0.4.2',
 	author='tom hammons',
-	description='wahoowa',
+	description='Ay Ziggy Zoomba',
 	long_description=long_description,
 	long_description_content_type='text/markdown',
 	url='https://github.com/thammo4/uvatradier',

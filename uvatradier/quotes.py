@@ -222,7 +222,7 @@ class Quotes (Tradier):
 					print("YO! ... Second argument 'last_price' should be bool.");
 				if 'last' not in df_quote:
 					return f"No last price found: {symbol}.";
-				return float(df_quote['last']);
+				return float(df_quote['last'].iloc[0]);
 
 			return df_quote;
 

@@ -64,6 +64,10 @@ Steps to get started:
       
       `account = Account(tradier_acct, tradier_token, live_trade=True)`
 
+      `equity_order = EquityOrder(tradier_acct, tradier_token, live_trade=True)`
+
+      `options_order = OptionsOrder(tradier_acct, tradier_token, live_trade=True)`
+
   * If live trading is enabled, then you can utilize the `Stream` class to stream market events:
 
       `stream = Stream(tradier_acct, tradier_token, live_trade=True)`
@@ -98,7 +102,19 @@ This section provides example functionality of the existing codebase. Additional
 
 - Place Equity Order:
 
-  `order_response = equity_order.place_order('AAPL', 'buy', 1, 'limit', 150)`
+  `order_response = equity_order.order('QQQ', 'buy', 10, 'market', duration='gtc');`
+
+- Check an Equity Order:
+
+  `order_status = equity_order.fetch(12345678)` 
+
+- Modify an Equity Order:
+
+  `mod_response = equity_order.modify(12345678, duration='gtc')`
+
+- Delete an Equity Order:
+
+  `delete_response = equity_order.delete(1234567)`
 
 - Place Options Order:
 

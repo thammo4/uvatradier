@@ -5,14 +5,14 @@ import pandas as pd
 
 
 class EquityOrder (Tradier):
-	def __init__ (self, account_number, auth_token):
-		Tradier.__init__(self, account_number, auth_token);
+	def __init__ (self, account_number, auth_token, live_trade=False):
+		Tradier.__init__(self, account_number, auth_token, live_trade);
 
 		#
 		# Order endpoint
 		#
 
-		self.ORDER_ENDPOINT = "v1/accounts/{}/orders".format(self.ACCOUNT_NUMBER); # POST
+		self.ORDER_ENDPOINT = f"v1/accounts/{self.ACCOUNT_NUMBER}/orders"; # POST
 
 	def order (self, symbol, side, quantity, order_type, duration='day', limit_price=False, stop_price=False):
 		'''

@@ -122,33 +122,170 @@ class Account (Tradier):
 
 		return pd.json_normalize(r.json()['balances']);
 
-
-	def get_gainloss (self):
+	def get_gainloss (self, page=1, limit=100, sort_by='closeDate', sort_direction='desc', start_date=None, end_date=None, symbol_filter=None):
 		'''
-			Get cost basis information for a specific user account.
-			This includes information for all closed positions.
-			Cost basis information is updated through a nightly batch reconciliation process with tradier clearing firm.
+			Args (All Optional):
+				• page (int): Page from which to begin returning records.
+				• limit (int): Number of records to return on each page.
+				• sort_by (str): Field by which results will be sorted. One of: 'openDate', 'closeDate'
+				• sort_direction (str): Direction in which the `sortBy` field will be sorted. One of: 'asc', 'desc'.
+				• start_date (str, YYYY-mm-dd): Date from which records are returned.
+				• end_date (str, YYYY-mm-dd): Date until which records are returned.
+				• symbol_filter (str): Alphanumeric character used to filter returned results.
 
 			Returns:
-				Pandas dataframe with columns [close_date, cost, gain_loss, gain_loss_percent, open_date, proceeds, quantity, symbol, term]
+				• pandas.DataFrame:
+					(DF) A DataFrame containing cost basis related information pertaining to positions which have been closed.
 
-			Example Output:
-				>>> account.get_gainloss().head()
-						close_date      cost  gain_loss  gain_loss_percent                 open_date  proceeds  quantity              symbol  term
-				0  2023-09-13T00:00:00.000Z  194700.0   -30600.0             -15.72  2023-08-25T00:00:00.000Z  164100.0      10.0  LMT240119C00260000    19
-				1  2023-09-13T00:00:00.000Z   10212.2     -432.6              -4.24  2023-09-06T00:00:00.000Z    9779.6      20.0                KLAC     7
-				2  2023-09-13T00:00:00.000Z    2300.0      175.0               7.61  2023-08-24T00:00:00.000Z    2475.0       1.0  HAL251219C00018000    20
-				3  2023-09-13T00:00:00.000Z   20700.0     1620.0               7.83  2023-08-24T00:00:00.000Z   22320.0       9.0  HAL251219C00018000    20
-				4  2023-09-06T00:00:00.000Z   16967.0     -193.0              -1.14  2023-09-01T00:00:00.000Z   16774.0     100.0                 TXN     5
+			Notes:
+				• The `symbol_filter` argument will return any row whose ticker symbol either is or contains the `symbol_filter` argument.
+
+			Example 1:
+				# Instantiate Account object
+				acct = Account(tradier_acct, tradier_token)
+
+				# Retrieve the most recent 100 records sorted from most->least recent date on which position was closed.
+				acct.get_gainloss()
+				                  close_date     cost  gain_loss  gain_loss_percent  ... proceeds  quantity  symbol term
+				0   2024-09-27T00:00:00.000Z  1933.10     343.90              17.79  ...  2277.00      10.0    AAPL  116
+				1   2024-09-16T00:00:00.000Z    28.66      -0.53              -1.85  ...    28.13       1.0     HAL    7
+				2   2024-09-16T00:00:00.000Z    37.52      -1.16              -3.09  ...    36.36      -1.0       B    7
+				3   2024-09-09T00:00:00.000Z   172.80       0.00               0.00  ...   172.80      40.0     VVR   10
+				4   2024-09-09T00:00:00.000Z   121.25      15.52              12.80  ...   136.77      97.0     VLD   10
+				..                       ...      ...        ...                ...  ...      ...       ...     ...  ...
+				95  2024-08-30T00:00:00.000Z   170.03       0.48               0.28  ...   170.51       1.0      PG    1
+				96  2024-08-30T00:00:00.000Z     6.08      -0.42              -6.91  ...     5.66      32.0    OPTT    8
+				97  2024-08-30T00:00:00.000Z  1125.74       7.84               0.70  ...  1133.58       7.0   GOOGL    1
+				98  2024-08-30T00:00:00.000Z   530.70       6.10               1.15  ...   536.80     122.0    FTCO    1
+				99  2024-08-30T00:00:00.000Z     5.76       0.10               1.74  ...     5.86       2.0   CURLF    1
+
+				[100 rows x 9 columns]
+
+			Example 2:
+				# Retrieve the first 100 closed positions sorted by increasing `close_date`
+				acct.get_gainloss(sort_direction='asc')
+				                  close_date      cost  gain_loss  gain_loss_percent                 open_date  proceeds  quantity symbol  term
+				0   2023-08-31T00:00:00.000Z   3443.90    -140.90              -4.09  2023-07-24T00:00:00.000Z   3303.00      10.0   MSFT    38
+				1   2023-09-06T00:00:00.000Z  16967.00    -193.00              -1.14  2023-09-01T00:00:00.000Z  16774.00     100.0    TXN     5
+				2   2023-09-06T00:00:00.000Z   5101.20      -6.70              -0.13  2023-09-06T00:00:00.000Z   5094.50      10.0   KLAC     0
+				3   2023-09-06T00:00:00.000Z   5101.20       1.20               0.02  2023-09-06T00:00:00.000Z   5102.40      10.0   KLAC     0
+				4   2023-09-06T00:00:00.000Z   5100.80       2.40               0.05  2023-09-06T00:00:00.000Z   5103.20      10.0   KLAC     0
+				..                       ...       ...        ...                ...                       ...       ...       ...    ...   ...
+				95  2024-08-20T00:00:00.000Z    122.60      -0.14              -0.11  2024-08-20T00:00:00.000Z    122.46       2.0      C     0
+				96  2024-08-20T00:00:00.000Z   1886.70       4.30               0.23  2024-08-20T00:00:00.000Z   1891.00       2.0    LLY     0
+				97  2024-08-20T00:00:00.000Z     45.00      -0.15              -0.33  2024-08-20T00:00:00.000Z     44.85       1.0    WMB     0
+				98  2024-08-20T00:00:00.000Z    693.24      -4.24              -0.61  2024-08-20T00:00:00.000Z    689.00       2.0   SPOT     0
+				99  2024-08-20T00:00:00.000Z    948.00      -0.11              -0.01  2024-08-20T00:00:00.000Z    947.89       1.0    LLY     0
+
+				[100 rows x 9 columns]
+
+			Example 3:
+				# Retrieve all closed positions whose ticker symbol begins with `V`
+				acct.get_gainloss(symbol_filter='V')
+				                  close_date    cost  gain_loss  gain_loss_percent                 open_date  proceeds  quantity symbol  term
+				0   2024-09-09T00:00:00.000Z  172.80       0.00               0.00  2024-08-30T00:00:00.000Z    172.80      40.0    VVR    10
+				1   2024-09-09T00:00:00.000Z  121.25      15.52              12.80  2024-08-30T00:00:00.000Z    136.77      97.0    VLD    10
+				2   2024-08-30T00:00:00.000Z   22.65       0.12               0.53  2024-08-29T00:00:00.000Z     22.77       3.0  VWDRY     1
+				3   2024-08-30T00:00:00.000Z   45.30       0.24               0.53  2024-08-29T00:00:00.000Z     45.54       6.0  VWDRY     1
+				4   2024-08-30T00:00:00.000Z   83.05       0.44               0.53  2024-08-29T00:00:00.000Z     83.49      11.0  VWDRY     1
+				..                       ...     ...        ...                ...                       ...       ...       ...    ...   ...
+				95  2024-08-21T00:00:00.000Z  551.76      -2.28              -0.41  2024-08-21T00:00:00.000Z    549.48     114.0    VOC     0
+				96  2024-08-21T00:00:00.000Z  140.36      -0.58              -0.41  2024-08-21T00:00:00.000Z    139.78      29.0    VOC     0
+				97  2024-08-21T00:00:00.000Z  121.00      -0.50              -0.41  2024-08-21T00:00:00.000Z    120.50      25.0    VOC     0
+				98  2024-08-21T00:00:00.000Z   24.20      -0.10              -0.41  2024-08-21T00:00:00.000Z     24.10       5.0    VOC     0
+				99  2024-08-21T00:00:00.000Z    4.84      -0.02              -0.41  2024-08-21T00:00:00.000Z      4.82       1.0    VOC     0
+
+				[100 rows x 9 columns]
+
+			Example 4:
+				# Retrieve all positions which were closed between August 30, 2024 and September 09, 2024 [inclusive]
+				acct.get_gainloss(start_date='2024-08-30', end_date='2024-09-09')
+				              close_date     cost  gain_loss  gain_loss_percent                 open_date  proceeds  quantity symbol  term
+				0   2024-09-09T00:00:00.000Z   172.80       0.00               0.00  2024-08-30T00:00:00.000Z    172.80      40.0    VVR    10
+				1   2024-09-09T00:00:00.000Z   121.25      15.52              12.80  2024-08-30T00:00:00.000Z    136.77      97.0    VLD    10
+				2   2024-09-09T00:00:00.000Z    94.14      -4.23              -4.49  2024-08-30T00:00:00.000Z     89.91       9.0    TME    10
+				3   2024-09-09T00:00:00.000Z  6510.80     -39.70              -0.61  2024-08-30T00:00:00.000Z   6471.10    1985.0    SJT    10
+				4   2024-09-09T00:00:00.000Z     3.50      -0.11              -3.14  2024-08-30T00:00:00.000Z      3.39      14.0   LLAP    10
+				..                       ...      ...        ...                ...                       ...       ...       ...    ...   ...
+				95  2024-08-30T00:00:00.000Z   530.70       6.10               1.15  2024-08-29T00:00:00.000Z    536.80     122.0   FTCO     1
+				96  2024-08-30T00:00:00.000Z     5.76       0.10               1.74  2024-08-29T00:00:00.000Z      5.86       2.0  CURLF     1
+				97  2024-08-30T00:00:00.000Z   315.37       2.44               0.77  2024-08-29T00:00:00.000Z    317.81      61.0    CGC     1
+				98  2024-08-30T00:00:00.000Z    48.00       0.64               1.33  2024-08-29T00:00:00.000Z     48.64       8.0    ACB     1
+				99  2024-08-30T00:00:00.000Z  1654.38     -13.16              -0.80  2024-08-29T00:00:00.000Z   1641.22      14.0    XOM     1
+
+				[100 rows x 9 columns]
 		'''
-		r = requests.get(
-			url = '{}/{}'.format(self.BASE_URL, self.ACCOUNT_GAINLOSS_ENDPOINT),
-			params = {},
-			headers = self.REQUESTS_HEADERS
-		);
 
-		return pd.json_normalize(r.json()['gainloss']['closed_position']);
+		#
+		# Construct HTTP GET Request Parameters
+		#
 
+		params = {
+			'page': page,
+			'limit': limit,
+			'sortBy': sort_by,
+			'sort': sort_direction,
+		};
+
+		if symbol_filter is not None:
+			params['symbol'] = symbol_filter.upper();
+
+		if start_date is not None:
+			params['start'] = start_date;
+
+		if end_date is not None:
+			params['end'] = end_date;
+
+		try:
+			r = requests.get(
+				url = f"{self.BASE_URL}/{self.ACCOUNT_GAINLOSS_ENDPOINT}",
+				params = params,
+				headers = self.REQUESTS_HEADERS
+			);
+			r.raise_for_status();
+
+			data = r.json();
+
+			#
+			# Validate Contents of Response from Tradier
+			#
+
+			if not data:
+				print("No data received from API");
+				return pd.DataFrame();
+
+			if 'gainloss' not in data:
+				print("API response missing 'gainloss'");
+				print(f"Received: {r.json()}");
+				return pd.DataFrame();
+
+			if 'closed_position' not in data['gainloss']:
+				print("API response missing 'closed_position'");
+				print(f"Received: {r.json()}");
+				return pd.DataFrame();
+
+			closed_positions = data['gainloss']['closed_position'];
+			if not closed_positions:
+				print("No closed positions.");
+				return pd.DataFrame();
+
+			if isinstance(closed_positions, dict):
+				closed_positions = [closed_positions];
+
+			return pd.json_normalize(closed_positions);
+
+		except JSONDecodeError as e:
+			print(f"ERROR - JSON response decoding: {e}");
+			return pd.DataFrame();
+		except RequestException as e:
+			print(f"ERROR - HTTP Request failed: {e}");
+			return pd.DataFrame();
+		except KeyError as e:
+			print(f"ERROR - Unexpected API response: {e}");
+			return pd.DataFrame();
+		except Exception as e:
+			print(f"ERROR - Unexpected garbage: {e}");
+			return pd.DataFrame();
 
 	def get_orders (self):
 		'''

@@ -44,7 +44,6 @@ class OptionsOrder (Tradier):
 		#
 
 		self.ORDER_ENDPOINT = "v1/accounts/{}/orders".format(account_number); # POST
-		print('hello, world!!!!');
 
 
 	#

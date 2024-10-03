@@ -42,7 +42,7 @@ class OptionsData (Tradier):
 		#
 
 		r = requests.get(
-			url 	= '{}/{}'.format(self.BASE_URL, self.OPTIONS_CHAIN_ENDPOINT),
+			url 	= f"{self.BASE_URL}/{self.OPTIONS_CHAIN_ENDPOINT}",
 			params 	= {'symbol':symbol, 'expiration':expiry, 'greeks':'false'},
 			headers = self.REQUESTS_HEADERS
 		);
@@ -147,21 +147,35 @@ class OptionsData (Tradier):
 			strikes (bool, optional): Whether to include strike prices for each expiry date. Defaults to False.
 
 		Returns:
-			If strikes=False 	-> returns list or list of dict: A list of expiry dates in the format 'YYYY-MM-DD'.
-			If strikes=True 	-> returns a list of dictionaries with expiry date and associated strike prices.
+			If strikes=False 	-> returns limst or list of dict: A list of expiry dates in the format 'YYYY-MM-DD'.
+			If strikes=True 	-> returns a dict, the value of whose only key, `expiration`, is a list whose elements are dictionaries with dates and strike prices.
 
 		Example:
-			>>> options = OptionsData(ACCOUNT_NUMBER, AUTH_TOKEN)
-			>>> options.get_expiry_dates(symbol='DFS')
-			['2023-09-08', '2023-09-15', '2023-09-22', '2023-09-29', '2023-10-06', '2023-10-13', '2023-10-20', '2023-11-17', '2024-01-19', '2024-04-19', '2024-06-21', '2025-01-17']
+			# Instantiate with account number and authorization token
+			>>> options_data = OptionsData(tradier_acct, tradier_token)
 
-			>>> options.get_expiry_dates(symbol='DFS', strikes=True)
-			[{'date': '2023-09-08', 'strikes': {'strike': [59.0, 60.0, 61.0, ...]}, {'date': '2023-09-15', 'strikes': {'strike': [55.0, 60.0, ...}}, ...]
+			# Upcoming expiration dates for Zebra Technologies Corp (ZBRA)
+			>>> options_data.get_expiry_dates('ZBRA')
+			['2024-10-18', '2024-11-15', '2024-12-20', '2025-02-21', '2025-05-16']
+
+			# Upcoming expiration dates and available strike prices for ZBRA (output manually tidied up for clarity)
+			>>> options_data.get_expiry_dates('ZBRA', True)
+			{'expiration': [
+				{'date': '2024-10-18', 'strikes': {'strike': [135.0, 140.0, 145.0, 150.0, 155.0, 160.0, 165.0, 170.0, 175.0, 180.0, 185.0, 190.0, 195.0, 200.0, 210.0, 220.0, 230.0, 240.0, 250.0, 260.0, 270.0, 280.0, 290.0, 300.0, 310.0, 320.0, 330.0, 340.0, 350.0, 360.0, 370.0, 380.0, 390.0, 400.0, 410.0, 420.0, 430.0, 440.0, 450.0, 460.0, 470.0, 480.0, 490.0, 500.0, 510.0]}},
+
+				{'date': '2024-11-15', 'strikes': {'strike': [135.0, 140.0, 145.0, 150.0, 155.0, 160.0, 165.0, 170.0, 175.0, 180.0, 185.0, 190.0, 195.0, 200.0, 210.0, 220.0, 230.0, 240.0, 250.0, 260.0, 270.0, 280.0, 290.0, 300.0, 310.0, 320.0, 330.0, 340.0, 350.0, 360.0, 370.0, 380.0, 390.0, 400.0, 410.0, 420.0, 430.0, 440.0, 450.0, 460.0, 470.0, 480.0, 490.0, 500.0]}},
+
+				{'date': '2024-12-20', 'strikes': {'strike': [100.0, 105.0, 110.0, 115.0, 120.0, 125.0, 130.0, 135.0, 140.0, 145.0, 150.0, 155.0, 160.0, 165.0, 170.0, 175.0, 180.0, 185.0, 190.0, 195.0, 200.0, 210.0, 220.0, 230.0, 240.0, 250.0, 260.0, 270.0, 280.0, 290.0, 300.0, 310.0, 320.0, 330.0, 340.0, 350.0, 360.0, 370.0, 380.0, 390.0, 400.0, 410.0, 420.0, 430.0, 440.0, 450.0, 460.0, 470.0, 480.0, 490.0, 500.0]}},
+
+				{'date': '2025-02-21', 'strikes': {'strike': [155.0, 160.0, 165.0, 170.0, 175.0, 180.0, 185.0, 190.0, 195.0, 200.0, 210.0, 220.0, 230.0, 240.0, 250.0, 260.0, 270.0, 280.0, 290.0, 300.0, 310.0, 320.0, 330.0, 340.0, 350.0, 360.0, 370.0, 380.0, 390.0, 400.0, 410.0, 420.0, 430.0, 440.0, 450.0, 460.0, 470.0, 480.0, 490.0, 500.0, 520.0, 540.0]}},
+
+				{'date': '2025-05-16', 'strikes': {'strike': [185.0, 190.0, 195.0, 200.0, 210.0, 220.0, 230.0, 240.0, 250.0, 260.0, 270.0, 280.0, 290.0, 300.0, 310.0, 320.0, 330.0, 340.0, 350.0, 360.0, 370.0, 380.0, 390.0, 400.0, 410.0, 420.0, 430.0, 440.0, 450.0, 460.0, 470.0, 480.0, 490.0, 500.0, 520.0, 540.0, 560.0]}}
+			]}
 		'''
 
 		try:
 			r = requests.get(
-				url 	= '{}/{}'.format(self.BASE_URL, self.OPTIONS_EXPIRY_ENDPOINT),
+				url 	= f"{self.BASE_URL}/{self.OPTIONS_EXPIRY_ENDPOINT}",
 				params 	= {'symbol':symbol, 'includeAllRoots':True, 'strikes':str(strikes)},
 				headers = self.REQUESTS_HEADERS
 			);
@@ -265,7 +279,7 @@ class OptionsData (Tradier):
 
 
 		r = requests.get(
-			url 		= '{}/{}'.format(self.BASE_URL, self.OPTIONS_SYMBOL_ENDPOINT),
+			url 		= f"{self.BASE_URL}/{self.OPTIONS_SYMBOL_ENDPOINT}",
 			params 		= {'underlying':symbol},
 			headers 	= self.REQUESTS_HEADERS
 		);

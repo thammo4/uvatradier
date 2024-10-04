@@ -329,24 +329,20 @@ class Account (Tradier):
 
 	def get_orders (self):
 		'''
-		Fetch the user profile's account information from the Tradier Account API.
-
-		This function makes a GET request to the Tradier Account API. For each account associated with your profile, it provides basic information
-		such as created/last-updated dates, option trading level, account's margin status, etc...
+		Retrieve orders recently submitted to Tradier. Provides information related to:
+			• Basic Order Info - symbol, trade, side, #shares, fill status.
+			• Order Fill Metrics - mean/last fill price, #shares filled/to-be-filled.
+			• (Options Only) options strategy inferred from legs of trade, OCC symbols comprising combination position.
 
 		Returns:
-		    • pandas.DataFrame: A DataFrame containing user profile information.
-
-		Notes:
-		    • For profiles having n-accounts, n ≥ 2, each account will be a row in the returned DataFrame. ***
-		    *** (i'm pretty sure this is true, but as I've only 1 account to my name right now, I can't actually test to confirm yet.) ***
+		    • pandas.DataFrame: Each row is a (potentially multileg) options or equity order submitted.
 
 		Example:
 		    # Create `Account` object with account number and authorization token credentials.
 		    >>> acct = Account(tradier_acct, tradier_token)
 
 		    # Retrieve orders that were recently submitted (shown: 2 credit spread orders)
-			>>> acct.get_orders()
+		    >>> acct.get_orders()
 			         id    type symbol side  quantity  status duration  avg_fill_price  ...  last_fill_quantity  remaining_quantity               create_date          transaction_date     class num_legs strategy                                                leg
 			0  14327159  market    AON  buy       2.0  filled      day           -2.40  ...                 1.0                 0.0  2024-10-03T16:59:11.262Z  2024-10-03T16:59:11.537Z  multileg        2   spread  [{'id': 14327160, 'type': 'market', 'symbol': ...
 			1  14327360  market    DRI  buy       2.0  filled      day           -0.05  ...                 1.0                 0.0  2024-10-03T17:09:22.613Z  2024-10-03T17:09:22.853Z  multileg        2   spread  [{'id': 14327361, 'type': 'market', 'symbol': ...

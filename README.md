@@ -52,7 +52,7 @@ Steps to get started:
 
       `equity_order = EquityOrder(tradier_acct, tradier_token)`
 
-      `options_data = OptionsData(tradier_acct, tradier_token`
+      `options_data = OptionsData(tradier_acct, tradier_token)`
 
       `options_order = OptionsOrder(tradier_acct, tradier_token)`
 

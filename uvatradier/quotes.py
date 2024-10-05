@@ -5,6 +5,7 @@ import datetime
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import warnings;
+from requests.exceptions import RequestException
 
 class Quotes (Tradier):
 	def __init__ (self, account_number, auth_token, live_trade=False):
@@ -20,7 +21,6 @@ class Quotes (Tradier):
 		self.QUOTES_TIMESALES_ENDPOINT 		= "v1/markets/timesales"; 										# GET
 
 	def get_historical_quotes (self, symbol, interval='daily', start_date=False, end_date=False, verbose=False):
-
 		'''
 		Fetch historical stock data for a given symbol from the Tradier Account API.
 
@@ -148,7 +148,7 @@ class Quotes (Tradier):
 
 		Example:
 			# Create a Quotes instance
-			quotes = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)
+			quotes = Quotes(tradier_acct, tradier_token)
 
 			# Retrieve current quote data for symbol 'CCL' and transpose the DataFrame for easy viewing
 			ccl_quote = quotes.get_quote_day(symbol='CCL').T
@@ -250,7 +250,7 @@ class Quotes (Tradier):
 
 		Example:
 			# Create a Quotes instance
-			quotes = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)
+			quotes = Quotes(tradier_acct, tradier_token)
 
 			# Retrieve current quote data for Citi Group, JP Morgan, and Goldman Sachs
 			quotes.get_quote_data(symbol_list=['C', 'JPM', 'GS'])
@@ -363,50 +363,126 @@ class Quotes (Tradier):
 			print(f"Something terrible as happened: {str(e)}.");
 			pd.DataFrame();
 
-	def get_timesales (self, symbol, interval='1min', start_time=False, end_time=False):
+	def get_timesales (self, symbol, interval='1min', start_time=None, end_time=None):
 		'''
-			This function returns the tick data for `symbol` in increments specified by `interval`.
-			Eventually, we can use this to analyze/visualze stock data in a time series context.
+		Retrieve intraday OHLCV bar data for a given stock at a specified time interval.
 
-			Arguments `start_time` and `end_time` must be strings with format 'YYYY-MM-DD HH:MM'
+		Args:
+			• symbol (str): The trading symbol of the stock (e.g., 'AAPL', 'MSFT') for which you want to retrieve intraday data.
+			• interval (str, optional): The time interval for intraday data. One of: tick, 1min, 5min, 15min.
+			• start_time (str 'YYYY-MM-DD HH:MM', optional): The start time for the intraday data returned. This will be the first row of the result set.
+			• end_date (str 'YYYY-MM-DD HH:MM', optional): The end time for the intraday data returned.
 
-			Sample output:
-				>>> quotes.get_timesales('VZ', start_time='2023-09-27 09:45', end_time='2023-09-27 14:00')
-				                    time   timestamp     price     open     high      low   close  volume       vwap
-				0    2023-09-27T09:45:00  1695822300  32.92995  32.9500  32.9500  32.9099  32.915   39077  32.924828
-				1    2023-09-27T09:46:00  1695822360  32.89560  32.9112  32.9112  32.8800  32.895   32867  32.891113
-				2    2023-09-27T09:47:00  1695822420  32.88750  32.8950  32.9100  32.8650  32.910   75720  32.888736
-				3    2023-09-27T09:48:00  1695822480  32.91750  32.9100  32.9250  32.9100  32.910   15126  32.913109
-				4    2023-09-27T09:49:00  1695822540  32.91000  32.9100  32.9200  32.9000  32.920   20335  32.907385
-				..                   ...         ...       ...      ...      ...      ...     ...     ...        ...
-				251  2023-09-27T13:56:00  1695837360  32.35425  32.3450  32.3655  32.3430  32.360   58256  32.354522
-				252  2023-09-27T13:57:00  1695837420  32.35500  32.3500  32.3600  32.3500  32.360   15825  32.355307
-				253  2023-09-27T13:58:00  1695837480  32.36125  32.3599  32.3700  32.3525  32.365   34624  32.362786
-				254  2023-09-27T13:59:00  1695837540  32.37500  32.3700  32.3900  32.3600  32.390   27728  32.370699
-				255  2023-09-27T14:00:00  1695837600  32.38750  32.3866  32.3950  32.3800  32.385   53837  32.386281
+		Returns:
+			• pandas.DataFrame: A DataFrame containing intraday OHLCV bar data for the specified symbol.
 
-				(vwap = volume weighted average price during the interval)
+		Notes:
+			• Tradier does not keep past intraday data available indefinitely. This should be used primarily for very recent dates. To test with the below examples, adjust the date to something closer to the current date. For more, see:
+
+				https://documentation.tradier.com/brokerage-api/markets/get-timesales
+
+		Example 1: Minimal Arguments
+			# Create a Quotes instance
+			>>> quotes = Quotes(tradier_acct, tradier_token)
+
+			# Retrieve intraday stock data for symbol Citi (C)
+			>>> quotes.get_timesales("C")
+			                   time   timestamp     price     open     high      low    close   volume       vwap
+			0   2024-10-04T16:00:00  1728072000  62.64000  62.6400  62.6400  62.6400  62.6400  1618854  62.640000
+			1   2024-10-04T16:06:00  1728072360  62.64000  62.6400  62.6400  62.6400  62.6400     2651  62.640000
+			2   2024-10-04T16:08:00  1728072480  62.64000  62.6400  62.6400  62.6400  62.6400      565  62.640000
+			3   2024-10-04T16:24:00  1728073440  62.51000  62.5100  62.5100  62.5100  62.5100      400  62.510000
+			4   2024-10-04T16:26:00  1728073560  62.51010  62.5101  62.5101  62.5101  62.5101      116  62.527989
+			5   2024-10-04T16:31:00  1728073860  62.52500  62.5200  62.5400  62.5100  62.5100     2880  62.515042
+			6   2024-10-04T16:36:00  1728074160  62.64000  62.6400  62.6400  62.6400  62.6400   123816  62.640000
+			7   2024-10-04T16:58:00  1728075480  62.64000  62.6400  62.6400  62.6400  62.6400    96911  62.640000
+			8   2024-10-04T16:59:00  1728075540  62.52000  62.5200  62.5200  62.5200  62.5200      300  62.520000
+			9   2024-10-04T17:07:00  1728076020  62.58000  62.5800  62.5800  62.5800  62.5800      150  62.580000
+			10  2024-10-04T17:17:00  1728076620  62.57500  62.5700  62.5800  62.5700  62.5800      479  62.573027
+			11  2024-10-04T17:27:00  1728077220  62.57000  62.5700  62.5700  62.5700  62.5700      700  62.570000
+			12  2024-10-04T17:41:00  1728078060  62.57000  62.5700  62.5700  62.5700  62.5700      400  62.570000
+			13  2024-10-04T17:42:00  1728078120  62.56000  62.5600  62.5600  62.5600  62.5600     1000  62.559600
+			14  2024-10-04T18:36:00  1728081360  62.57000  62.5700  62.5700  62.5700  62.5700      200  62.570000
+			15  2024-10-04T18:42:00  1728081720  62.57925  62.5700  62.5885  62.5700  62.5885      600  62.579025
+			16  2024-10-04T18:43:00  1728081780  62.58500  62.5900  62.5900  62.5800  62.5800      200  62.585000
+			17  2024-10-04T18:53:00  1728082380  62.57500  62.5800  62.5800  62.5700  62.5700      241  62.575851
+			18  2024-10-04T18:59:00  1728082740  62.59000  62.5900  62.5900  62.5900  62.5900      100  62.590000
+			19  2024-10-04T19:33:00  1728084780  62.50110  62.5011  62.5011  62.5011  62.5011      352  62.503462
+			20  2024-10-04T19:56:00  1728086160  62.53000  62.5300  62.5300  62.5300  62.5300      500  62.530000
+
+		Example 2: Weyerhauser 15-minute interval intraday data for afternoon of October 4, 2024.
+			# Create a Quotes instance
+			>>> quotes = Quotes(tradier_acct, tradier_token)
+
+			# Retrieve intraday Weyerhauser data.
+			>>> quotes.get_timesales(symbol='WY', interval='15min', start_time='2024-10-04 12:00', end_time='2024-10-04 16:00')
+			                   time   timestamp     price    open     high     low   close  volume       vwap
+			0   2024-10-04T12:00:00  1728057600  32.82250  32.805  32.8850  32.760  32.800  112648  32.831508
+			1   2024-10-04T12:15:00  1728058500  32.78750  32.808  32.8350  32.740  32.765   38523  32.783795
+			2   2024-10-04T12:30:00  1728059400  32.84000  32.770  32.9150  32.765  32.900   37764  32.837720
+			3   2024-10-04T12:45:00  1728060300  32.94250  32.900  32.9950  32.890  32.965   80334  32.954177
+			4   2024-10-04T13:00:00  1728061200  33.00250  32.965  33.0500  32.955  33.005   60547  33.008234
+			5   2024-10-04T13:15:00  1728062100  32.98250  33.010  33.0150  32.950  32.955   37137  32.996037
+			6   2024-10-04T13:30:00  1728063000  32.96250  32.950  33.0150  32.910  33.000   41859  32.969801
+			7   2024-10-04T13:45:00  1728063900  32.94945  33.000  33.0089  32.890  32.910   30530  32.942807
+			8   2024-10-04T14:00:00  1728064800  32.89000  32.910  32.9150  32.865  32.900   86852  32.889426
+			9   2024-10-04T14:15:00  1728065700  32.91750  32.900  32.9600  32.875  32.930   31357  32.918224
+			10  2024-10-04T14:30:00  1728066600  32.93750  32.930  32.9650  32.910  32.940   24714  32.942706
+			11  2024-10-04T14:45:00  1728067500  32.95500  32.945  32.9750  32.935  32.955   43628  32.957438
+			12  2024-10-04T15:00:00  1728068400  32.95250  32.950  33.0000  32.905  32.985   65831  32.957778
+			13  2024-10-04T15:15:00  1728069300  32.99000  32.990  33.0250  32.955  32.965   78064  32.998393
+			14  2024-10-04T15:30:00  1728070200  32.98000  32.965  33.0100  32.950  33.005   79725  32.983402
+			15  2024-10-04T15:45:00  1728071100  32.93750  33.005  33.0050  32.870  32.880  589946  32.935760
+			16  2024-10-04T16:00:00  1728072000  32.88000  32.880  32.8800  32.880  32.880  928888  32.880000
 		'''
+
+		#
+		# Confirm symbol argument
+		#
 
 		if not symbol:
-			return 'No ticker symbol provided';
+			raise ValueError("No ticker provided.");
+			return pd.DataFrame();
 
 		symbol = symbol.upper();
 
+		#
+		# Check for valid interval
+		#
 
-		r_params = {'symbol':symbol};
-		if start_time:
+		valid_intervals = ['tick', '1min', '5min', '15min'];
+		if interval not in valid_intervals:
+			raise ValueError(f"Invalid Interval. Valid: {', '.join(valid_intervals)}");
+			return pd.DataFrame();
+
+		r_params = {'symbol':symbol, 'interval':interval};
+		if start_time is not None:
 			r_params['start'] = start_time;
-		if end_time:
+		if end_time is not None:
 			r_params['end'] = end_time;
 
-		r = requests.get(
-			url = '{}/{}'.format(self.BASE_URL, self.QUOTES_TIMESALES_ENDPOINT),
-			params = r_params,
-			headers = self.REQUESTS_HEADERS
-		);
+		try:
+			r = requests.get(
+				url = f"{self.BASE_URL}/{self.QUOTES_TIMESALES_ENDPOINT}",
+				params = r_params,
+				headers = self.REQUESTS_HEADERS
+			);
+			r.raise_for_status();
 
-		return pd.json_normalize(r.json()['series']['data']);
+			data = r.json();
+
+			if 'series' not in data or 'data' not in data['series']:
+				raise KeyError('ERROR - API Response Missing Data.');
+				return pd.DataFrame();
+
+			return pd.json_normalize(r.json()['series']['data']);
+
+		except RequestException as e:
+			raise RequestException(f"ERROR - API Request: {str(e)}");
+		except KeyError as e:
+			raise KeyError(f"ERROR - API Response Parse: {str(e)}");
+		except Exception as e:
+			raise Exception(f"ERROR - Unexpected API Response: {str(e)}");
 
 	def get_timeseries_plot (self, symbol, plot_var='close', interval='daily', start_date=False, end_date=False):
 		'''

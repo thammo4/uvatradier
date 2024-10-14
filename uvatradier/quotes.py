@@ -41,10 +41,10 @@ class Quotes (Tradier):
 
 		Example:
 			# Create a Quotes instance
-			quotes = Quotes(ACCOUNT_NUMBER, AUTH_TOKEN)
+			>>> quotes = Quotes(tradier_acct, tradier_token)
 
 			# Retrieve historical stock data for symbol 'BIIB'
-			historical_data = quotes.get_historical_quotes(symbol='BIIB')
+			>>> historical_data = quotes.get_historical_quotes(symbol='BIIB')
 
 			Sample Output:
 			         date    open     high     low   close   volume

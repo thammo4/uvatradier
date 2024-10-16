@@ -70,7 +70,11 @@ Steps to get started:
 
 ## Usage
 
-This section provides examples of the most basic functionality. The examples include the minimal arguments needed for a valid function call. For most of the class methods, additional examples can be found in their docstring (for example, `help(Quotes.get_historical_quotes)`). You can also check the `/examples/` directory if you're really desparate, but it is not (and has not been) updated in awhile.
+This section provides examples of the most basic functionality. The examples include the minimal arguments needed for a valid function call. <br>
+
+For most of the class methods, additional examples can be found in their docstring (for example, `help(Quotes.get_historical_quotes)`). <br>
+
+You can also check the `/examples/` directory if you're really desparate, but it is not (and has not been) updated in awhile.
 
 ### Account Management
 

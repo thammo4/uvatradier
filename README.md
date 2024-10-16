@@ -70,7 +70,7 @@ Steps to get started:
 
 ## Usage
 
-This section provides example functionality of the existing codebase. Additional sample code demonstrating usage can be found in the `/examples/` directory.
+This section provides examples of the most basic functionality. The examples include the minimal arguments needed for a valid function call. For most of the class methods, additional examples can be found in their docstring (for example, `help(Quotes.get_historical_quotes)`). You can also check the `/examples/` directory if you're really desparate, but it is not (and has not been) updated in awhile.
 
 ### Account Management
 
@@ -98,39 +98,47 @@ This section provides example functionality of the existing codebase. Additional
 
 - Place Equity Order:
 
-  `order_response = equity_order.place_order('AAPL', 'buy', 1, 'limit', 150)`
+  `order_response = equity_order.order(symbol='GOOD', side='buy', quantity=1, order_type='market', duration='day')`
 
 - Place Options Order:
 
-  `order_response = options_order.place_order('AAPL210917C00125000', 'buy_to_open', 1, 'limit', 3.5)`
+  `order_response = options_order.options_order(occ_symbol='GOOD241018C00015000', order_type='market', side='buy_to_open', quantity=1, duration='day')`
 
 ### Market Data
 
-- Get Quotes:
+- Get Quote for Single Stock:
 
-  `quotes_data = quotes.get_quote_day('AAPL')`
+  `stock_quote = quotes.get_quote_day('TAP')`
 
 - Get Historical Quotes:
 
-  `historical_data = quotes.get_historical_quotes('AAPL')`
+  `historical_quotes = quotes.get_historical_quotes('TAP')`
 
 - Get Time Sales:
 
-  `timesales = quotes.get_timesales('AAPL')`
+  `timesales = quotes.get_timesales('TAP')`
+
+- Get Quote for Multiple (List of) Stocks:
+
+  `quote_data = quotes.get_quote_data(['TAP', 'BUD', 'SAM'])`
 
 ### Options Data
 
-- Get Options Chains:
+- Get a Stock's Option Chain:
 
-  `options_chains = options_data.get_options_chain('AAPL')`
+  `option_chain = options_data.get_chain_day('FUN')`
 
-- Get Options Strikes:
+- Get Nearest Expiry Date to a Specified Number of Days into Future:
 
-  `options_strikes = options_data.get_options_strikes('AAPL')`
+  `option_closest_expiry = options_data.get_closest_expiry('FUN', num_days=45)`
 
-- Get Options Expirations:
+- Get Future Expiry Dates:
 
-  `options_expirations = options_data.get_options_expirations('AAPL')`
+  `option_expiry_dates = options_data.get_expiry_dates('FUN')`
+
+- Get All OCC Symbols for a Stock:
+
+  `option_symbols = options_data.get_options_symbols('FUN')`
 
 ### Stream Market Events
 

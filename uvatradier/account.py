@@ -371,19 +371,12 @@ class Account (Tradier):
 		JSON format, containing details about the positions held in the account.
 
 		Args:
-			symbols (list, optional): A list of trading symbols (e.g., stock ticker symbols)
-										to filter the position data. If provided, only positions
-										matching these symbols will be included. Exact matches only are returned.
-			equities (bool, optional): If True, filter the positions to include only equities
-										(stocks) with symbols less than 5 characters in length.
-										If False, no filtering based on equities will be applied.
-			options (bool, optional): If True, filter the positions to include only options
-										with symbols exceeding 5 characters in length.
-										If False, no filtering based on options will be applied.
+			• symbols (list, optional): A list of trading symbols (e.g. ['KIND', 'OF', 'LIKE', 'THIS']) to filter the position data. If provided, only positions matching these symbols will be included. Exact matches only are returned.
+			• equities (bool, optional): If True, filter the positions to include only equities (stocks) with symbols less than 5 characters in length.
+			• options (bool, optional): If True, filter the positions to include only options with symbols exceeding 5 characters in length.
 
 		Returns:
-			pandas.DataFrame: A DataFrame containing filtered position information based on
-								the specified criteria.
+			• pandas.DataFrame: Rows are positions. Columns are cost_basis, date_acquired, id, quantity, symbol.
 
 		Example:
 			# Initialize Account object

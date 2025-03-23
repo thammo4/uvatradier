@@ -49,7 +49,7 @@ class Stream (Tradier):
 	# Initiate Market Event Stream
 	#
 
-	def stream_market_events (self, symbol_list, filter_list=None, line_break=False, valid_ticks_only=True, advanced_details=True):
+	def stream_market_events (self, symbol_list, filter_list=None, line_break=False, valid_ticks_only=True, advanced_details=True, callback=None):
 		"""
 		Start asynchronous market event streaming for a list of symbols.
 		This function wraps the asynchronous connection in a synchronous callable method by using asyncio.run.
@@ -69,7 +69,9 @@ class Stream (Tradier):
 			# Stream Kinder Morgan Inc. quotes and trade events with line break separating each event
 			stream.stream_market_events(symbol_list=['KMI'], filter_list=['trade', 'quote'], line_break=True)
 		"""
-		asyncio.run(self.ws_market_connect(symbol_list, filter_list, line_break, valid_ticks_only, advanced_details));
+		asyncio.run(
+			self.ws_market_connect(symbol_list, filter_list, line_break, valid_ticks_only, advanced_details, callback)
+		)
 
 
 	#
@@ -117,7 +119,7 @@ class Stream (Tradier):
 	# Connect to WebSocket Stream
 	#
 
-	async def ws_market_connect (self, symbol_list, filter_list, line_break, valid_ticks_only, advanced_details):
+	async def ws_market_connect (self, symbol_list, filter_list, line_break, valid_ticks_only, advanced_details, callback=None):
 		"""
 		Asynchronously connect to the WebSocket stream endpoint and handle market data events.
 		This function should not need to be called directly. Use stream_market_events instead.
@@ -149,8 +151,9 @@ class Stream (Tradier):
 				print(f"Sending: {payload}\n");
 
 				await websocket.send(payload);
+
 				async for message in websocket:
-					print(message);
+					callback(message) if callback is not None else print(message)
 
 		except websockets.ConnectionClosedError as e:
 			print(f"Websocket connection closed but idk why: {e}.");

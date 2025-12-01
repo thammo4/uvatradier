@@ -132,6 +132,12 @@ You can also check the `/examples/` directory if you're really desparate, but it
 
   `option_chain = options_data.get_chain_day('FUN')`
 
+- Both `get_chain_day` and `get_chain_all` accept an optional `greeks` flag (default `False`). Set `greeks=True` if you need Tradier's delta, gamma, theta, etc. included in the returned dataframe.
+
+- Get a Stock's Option Chain with Greeks:
+
+  `option_chain = options_data.get_chain_day('FUN', greeks=True)`
+
 - Get Nearest Expiry Date to a Specified Number of Days into Future:
 
   `option_closest_expiry = options_data.get_closest_expiry('FUN', num_days=45)`

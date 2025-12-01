@@ -3,6 +3,7 @@ import dotenv;
 import requests;
 import numpy as np;
 import pandas as pd;
+from collections.abc import Hashable
 
 import datetime;
 from datetime import datetime, timedelta; 	# for fetching option expiries
@@ -547,7 +548,7 @@ class OptionsData (Tradier):
 	# Fetch all option chain data for a single day of contract expirations
 	#
 
-	def get_chain_day (self, symbol, expiry='', strike=False, strike_low=False, strike_high=False, option_type=False):
+	def get_chain_day (self, symbol, expiry='', strike=False, strike_low=False, strike_high=False, option_type=False, greeks=False):
 		'''
 			This function returns option chain data for a given symbol.
 			All contract expirations occur on the same expiry date
@@ -564,32 +565,61 @@ class OptionsData (Tradier):
 		# Define request object for given symbol and expiration
 		#
 
-		r = requests.get(
-			url 	= '{}/{}'.format(self.SANDBOX_URL, self.OPTIONS_CHAIN_ENDPOINT),
-			params 	= {'symbol':symbol, 'expiration':expiry, 'greeks':'false'},
-			headers = self.REQUESTS_HEADERS
-		);
+		def _bool_to_flag(value):
+			if isinstance(value, str):
+				return 'true' if value.strip().lower() in ['true', '1', 'yes'] else 'false';
+			return 'true' if bool(value) else 'false';
+
+		request_params = {
+			'symbol' 	: symbol,
+			'expiration': expiry,
+			'greeks'	: _bool_to_flag(greeks) if greeks is not None else 'false'
+		};
+
+		try:
+			r = requests.get(
+				url 	= '{}/{}'.format(self.SANDBOX_URL, self.OPTIONS_CHAIN_ENDPOINT),
+				params 	= request_params,
+				headers = self.REQUESTS_HEADERS
+			);
+			r.raise_for_status();
+		except requests.exceptions.RequestException as exc:
+			raise RuntimeError(f"Failed to retrieve option chain for {symbol} ({expiry}): {exc}");
 
 		#
 		# Convert returned json -> pandas dataframe
 		#
 
-		option_df = pd.DataFrame(r.json()['options']['option']);
+		response_json = r.json() or {};
+		options_payload = response_json.get('options');
+		option_rows = options_payload.get('option') if isinstance(options_payload, dict) else None;
+
+		if not option_rows:
+			raise ValueError(f"No option chain data returned for symbol '{symbol}' and expiration '{expiry}'.");
+
+		option_df = pd.DataFrame(option_rows);
 
 
 		#
 		# Remove columns which have the same value for every row
 		#
 
-		cols_to_drop = option_df.nunique()[option_df.nunique() == 1].index;
-		option_df = option_df.drop(cols_to_drop, axis=1);
+		hashable_cols = [
+			col for col in option_df.columns
+			if option_df[col].map(lambda val: isinstance(val, Hashable) or pd.isna(val)).all()
+		];
+
+		if hashable_cols:
+			nunique_counts = option_df[hashable_cols].nunique();
+			cols_to_drop = nunique_counts[nunique_counts == 1].index;
+			option_df = option_df.drop(cols_to_drop, axis=1);
 
 		#
 		# Remove columns which have NaN in every row
 		#
 
-		cols_to_drop = option_df.nunique()[option_df.nunique() == 0].index;
-		option_df = option_df.drop(cols_to_drop, axis=1);
+		empty_cols = option_df.columns[~option_df.notna().any()];
+		option_df = option_df.drop(empty_cols, axis=1);
 
 
 		#

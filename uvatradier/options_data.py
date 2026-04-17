@@ -60,21 +60,25 @@ class OptionsData (Tradier):
 			url 	= f"{self.BASE_URL}/{self.OPTIONS_CHAIN_ENDPOINT}",
 			params 	= {'symbol':symbol, 'expiration':expiry, 'greeks':'false'},
 			headers = self.REQUESTS_HEADERS
-		);
+		)
+		response_json = r.json()
+
+		if not response_json.get("options") or "option" not in response_json["options"]:
+			return pd.DataFrame()
 
 		#
 		# Convert returned json -> pandas dataframe
 		#
 
-		option_df = pd.DataFrame(r.json()['options']['option']);
+		option_df = pd.DataFrame(r.json()['options']['option'])
 
 
 		#
 		# Remove columns which have the same value for every row
 		#
 
-		cols_to_drop = option_df.nunique()[option_df.nunique() == 1].index;
-		option_df = option_df.drop(cols_to_drop, axis=1);
+		cols_to_drop = option_df.nunique()[option_df.nunique() == 1].index
+		option_df = option_df.drop(cols_to_drop, axis=1)
 
 		#
 		# Remove columns which have NaN in every row

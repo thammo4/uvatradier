@@ -272,6 +272,26 @@ class OptionsOrder (Tradier):
 
 
 	#
+	# Cancel Order
+	#
+
+	def cancel_order (self, order_id):
+		try:
+			r = requests.delete(url=f"{self.BASE_URL}/{self.ORDER_ENDPOINT}/{order_id}", headers=self.REQUESTS_HEADERS)
+			r.raise_for_status()
+			return r.json()
+		except requests.RequestException as e:
+			if e.response is not None:
+				try:
+					e_msg = f"Failed API Error: {str(e)}"; e_msg += f"\nDetails {e.response.json()}"
+				except ValueError:
+					e_msg += f"\nPer Tradier: {e.response.text}"
+			else:
+				e_msg = f"API Request Failed: {str(e)}"
+			raise APIRequestError(e_msg)
+
+
+	#
 	# Multileg Order
 	# • Construct options order with ≤ 4 legs
 	# • Use to execute orders for options strategy trades

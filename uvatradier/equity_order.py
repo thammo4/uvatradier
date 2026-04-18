@@ -39,21 +39,35 @@ class EquityOrder (Tradier):
 			'quantity' 	: quantity,
 			'type' 		: order_type,
 			'duration' 	: duration
-		};
+		}
 
 		#
 		# If the order_type is limit, stop, or stop_limit --> Set the appropriate limit price or stop price
 		#
 
 		if order_type.lower() in ['limit', 'stop_limit']:
-			r_params['price'] = limit_price;
+			r_params['price'] = limit_price
 		if order_type.lower() in ['stop', 'stop_limit']:
-			r_params['stop'] = stop_price;
+			r_params['stop'] = stop_price
 
 		r = requests.post(
 			url = '{}/{}'.format(self.BASE_URL, self.ORDER_ENDPOINT),
 			params = r_params,
 			headers=self.REQUESTS_HEADERS
-		);
+		)
 
-		return r.json();
+		return r.json()
+
+	def cancel_order (self, order_id):
+		'''
+			Cancel existing options order.
+			Arguments:
+				order_id (int): order id to cancel
+			Returns:
+				requests.delete.json() response from Tradier API.
+		'''
+		r = requests.delete(
+			url = f"{self.BASE_URL}/{self.ORDER_ENDPOINT}/{order_id}",
+			headers = self.REQUESTS_HEADERS
+		)
+		return r.json()
